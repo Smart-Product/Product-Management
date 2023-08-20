@@ -85,7 +85,7 @@ https://www.linkedin.com/in/maurício-freire/)
 e iniciará a aplicação do front. 
 No backend deve inicializar o projeto gerenciamento para o spring rodar a aplicação</p>
 
-
+----
 
 
 
