@@ -2,7 +2,7 @@
 
 <img align="right" alt="GIF" src="https://i.imgur.com/x6a1mIq.gif" width="350" height="300" />
 
- ### Somos a SMART PRODUCT 👨‍💻 
+ ### Somos a SMART-PRODUCT 👨‍💻 
 
 <p>  O software Smart Products foi escolhido para atender problemas de estoque que, geralmente, muitos logistas possuem.</p>
 
