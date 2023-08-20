@@ -77,6 +77,14 @@ https://www.linkedin.com/in/maurício-freire/)
 
 ----
 
+### Clonagem do repositorio
+
+
+<p> Após fazer o git clone deve ser Instalados as dependências do REACT com 'npm install' na pasta frontend. 
+ Em caso de não baixar todas as lib terá que rodar o 'npm install [nome da lib]', depois é só dar o npm run dev
+e iniciará a aplicação do front. 
+No backend deve inicializar o projeto gerenciamento para o spring rodar a aplicação</p>
+
 
 
 
