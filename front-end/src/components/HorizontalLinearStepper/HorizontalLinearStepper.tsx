@@ -5,9 +5,10 @@ import Step from "@mui/material/Step";
 import StepButton from "@mui/material/StepButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import NameEmail from "./FormComponents/NameEmail";
-import CpfCnpj from "./FormComponents/CpfCnpj";
-import Password from "./FormComponents/Password";
+import NameEmail from "../FormComponents/Email";
+import CpfCnpj from "../FormComponents/CpfCnpj";
+import Password from "../FormComponents/Password";
+
 
 const steps = [
   "Insira seu nome e E-mail",
@@ -69,7 +70,15 @@ export default function HorizontalNonLinearStepper() {
 
   return (
     <>
-    <Box sx={{ width: "100%", height: '98vh', display: "flex", justifyContent: "space-between", flexDirection: "column" }}>
+      <Box
+        sx={{
+          width: "100%",
+          height: "98vh",
+          display: "flex",
+          justifyContent: "space-between",
+          flexDirection: "column",
+        }}
+      >
         <Stepper nonLinear activeStep={activeStep}>
           {steps.map((label, index) => (
             <Step key={label} completed={completed[index]}>
@@ -79,6 +88,9 @@ export default function HorizontalNonLinearStepper() {
             </Step>
           ))}
         </Stepper>
+
+        <form>
+
           {allStepsCompleted() ? (
             <React.Fragment>
               <Typography sx={{ mt: 2, mb: 1 }}>
@@ -90,10 +102,28 @@ export default function HorizontalNonLinearStepper() {
               </Box>
             </React.Fragment>
           ) : (
-            <React.Fragment>
-              {activeStep + 1 == 1 ? <NameEmail /> : <></>}
-              {activeStep + 1 == 2 ? <CpfCnpj /> : <></>}
-              {activeStep + 1 == 3 ? <Password /> : <></>}
+
+            <Box
+              sx={{
+                height: "90vh",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100%",
+                }}
+              >
+                {activeStep + 1 == 1 ? <NameEmail /> : <></>}
+                {activeStep + 1 == 2 ? <CpfCnpj /> : <></>}
+                {activeStep + 1 == 3 ? <Password /> : <></>}
+              </Box>
+
 
               <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                 <Button
@@ -121,8 +151,6 @@ export default function HorizontalNonLinearStepper() {
                     </Button>
                   ))}
               </Box>
-            </React.Fragment>
-          )}
       </Box>
     </>
   );
