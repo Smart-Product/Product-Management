@@ -2,16 +2,6 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-GerenciamentoApplication<gerenciamento>",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "io.github.smart.product.GerenciamentoApplication",
-            "projectName": "gerenciamento",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env"
-        },
-        {
-            "type": "java",
             "name": "Spring Boot-ManagementApplication<management>",
             "request": "launch",
             "cwd": "${workspaceFolder}",

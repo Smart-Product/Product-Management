@@ -9,6 +9,7 @@ import NameEmail from "../FormComponents/Email";
 import CpfCnpj from "../FormComponents/CpfCnpj";
 import Password from "../FormComponents/Password";
 
+
 const steps = [
   "Insira seu nome e E-mail",
   " Insira o CPF ou CNPJ",
@@ -87,7 +88,9 @@ export default function HorizontalNonLinearStepper() {
             </Step>
           ))}
         </Stepper>
+
         <form>
+
           {allStepsCompleted() ? (
             <React.Fragment>
               <Typography sx={{ mt: 2, mb: 1 }}>
@@ -99,6 +102,7 @@ export default function HorizontalNonLinearStepper() {
               </Box>
             </React.Fragment>
           ) : (
+
             <Box
               sx={{
                 height: "90vh",
@@ -119,6 +123,7 @@ export default function HorizontalNonLinearStepper() {
                 {activeStep + 1 == 2 ? <CpfCnpj /> : <></>}
                 {activeStep + 1 == 3 ? <Password /> : <></>}
               </Box>
+
 
               <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                 <Button
@@ -146,9 +151,6 @@ export default function HorizontalNonLinearStepper() {
                     </Button>
                   ))}
               </Box>
-            </Box>
-          )}
-        </form>
       </Box>
     </>
   );
