@@ -1,6 +1,8 @@
 import { Box, TextField } from "@mui/material";
 
-const NameEmail = () => {
+const Name = () => {
+
+  
   return (
     <>
       <Box
@@ -12,10 +14,9 @@ const NameEmail = () => {
         autoComplete="off"
       >
         <TextField id="standard-basic" label="Nome Completo" variant="standard" />
-        <TextField id="standard-basic" label="E-mail" variant="standard" />
       </Box>
     </>
   );
 };
 
-export default NameEmail;
+export default Name;

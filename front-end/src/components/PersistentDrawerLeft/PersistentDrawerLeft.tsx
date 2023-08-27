@@ -105,9 +105,13 @@ export default function PersistentDrawerLeft() {
       <AppBar
         position="fixed"
         open={open}
-        sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
       >
-        <Box sx={{display: 'flex', width: '50%' }}>
+        <Box sx={{ display: "flex", width: "50%" }}>
           <Toolbar
             sx={{
               display: "flex",
@@ -142,13 +146,20 @@ export default function PersistentDrawerLeft() {
           </Box>
         </Box>
 
-        <Box sx={{width: '10%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar
-                alt="Remy Sharp"
-                src="https://images.unsplash.com/photo-1691874683123-5d7bf8d79df1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80"
-              />
-            </IconButton>
+        <Box
+          sx={{
+            width: "10%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <Avatar
+              alt="Remy Sharp"
+              src="https://images.unsplash.com/photo-1691874683123-5d7bf8d79df1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80"
+            />
+          </IconButton>
           <Menu
             sx={{ mt: "45px" }}
             id="menu-appbar"
