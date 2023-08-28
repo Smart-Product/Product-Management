@@ -8,8 +8,7 @@ import Typography from "@mui/material/Typography";
 import CpfCnpj from "../FormComponents/CpfCnpj";
 import NameEmail from "../FormComponents/Email";
 import Password from "../FormComponents/Password";
-import { Link } from "react-router-dom";
-import { handleNavigate } from "../../utils/utils";
+import { Link, useNavigate } from "react-router-dom";
 
 const steps = [
   "Seu E-mail",
@@ -18,6 +17,7 @@ const steps = [
 ];
 
 export default function CreateAccount() {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean;
@@ -69,6 +69,10 @@ export default function CreateAccount() {
     setCompleted({});
   };
 
+  const handleNavigate = (path: string) => {
+    return navigate(path)
+  }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 
     e.preventDefault();
@@ -90,12 +94,9 @@ export default function CreateAccount() {
       <form onSubmit={handleSubmit}>
         {allStepsCompleted() ? (
           <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>
-              All steps completed - you&apos;re finished
-            </Typography>
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", pt: 2, justifyConten: "center" }}>
               <Box sx={{ flex: "1 1 auto" }} />
-              <Button type="submit">Login</Button>
+              <Button type="submit">Criar Conta</Button>
             </Box>
           </React.Fragment>
         ) : (
@@ -150,8 +151,9 @@ export default function CreateAccount() {
             </Box>
           </Box>
         )}
+        <p>Já possui uma conta ? Entre <Link to={'/login'}>Aqui</Link></p>
       </form>
-      <p>Já possui uma conta ? Entre <Link to={'/login'}>Aqui</Link></p>
+      
     </Box>
   );
 }

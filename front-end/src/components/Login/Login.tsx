@@ -9,11 +9,12 @@ import Password from "../FormComponents/Password";
 import Email from "../FormComponents/Email";
 import { Link, useNavigate } from "react-router-dom";
 import { IUser } from "../../interface/IUser";
-import { handleNavigate } from "../../utils/utils";
 
 const steps = ["E-mail", "Senha"];
 
 export default function Login() {
+
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean;
@@ -68,8 +69,11 @@ export default function Login() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
   };
+
+  const handleNavigate = (path: string) => () => {
+    return navigate(path);
+  }
 
   return (
     <Box sx={{ width: "100%", textAlign: "center" }}>
@@ -90,7 +94,7 @@ export default function Login() {
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
               <Box sx={{ flex: "1 1 auto" }} />
-              <Button onClick={handleNavigate("/")}>Cadastrar</Button>
+              <Button onClick={handleNavigate("/")}>Entrar</Button>
             </Box>
           </React.Fragment>
         ) : (

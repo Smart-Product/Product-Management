@@ -5,6 +5,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -21,6 +22,7 @@ import * as React from "react";
 
 import StoreIcon from "@mui/icons-material/Store";
 import { Avatar, Menu, MenuItem } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -77,6 +79,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function PersistentDrawerLeft() {
+
+  const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -98,6 +102,11 @@ export default function PersistentDrawerLeft() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const handleNavigate = (path: string) => {
+    return navigate(path)
+  }
+
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -176,11 +185,9 @@ export default function PersistentDrawerLeft() {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography onClick={() => handleNavigate("/cadastro")}>Logout</Typography>
               </MenuItem>
-            ))}
           </Menu>
         </Box>
       </AppBar>
