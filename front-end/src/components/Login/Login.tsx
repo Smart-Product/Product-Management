@@ -13,13 +13,12 @@ import { IUser } from "../../interface/IUser";
 const steps = ["E-mail", "Senha"];
 
 export default function Login() {
-
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean;
   }>({});
-  const [userLogin, setUserLogin] = React.useState<IUser>({})
+  const [userLogin, setUserLogin] = React.useState<IUser>({});
 
   const totalSteps = () => {
     return steps.length;
@@ -73,7 +72,7 @@ export default function Login() {
 
   const handleNavigate = (path: string) => () => {
     return navigate(path);
-  }
+  };
 
   return (
     <Box sx={{ width: "100%", textAlign: "center" }}>
@@ -88,15 +87,20 @@ export default function Login() {
       </Stepper>
       <form onSubmit={handleSubmit}>
         {allStepsCompleted() ? (
-          <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>
-              All steps completed - you&apos;re finished
-            </Typography>
+          <Box
+            sx={{
+              height: "86vh",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
               <Box sx={{ flex: "1 1 auto" }} />
               <Button onClick={handleNavigate("/")}>Entrar</Button>
             </Box>
-          </React.Fragment>
+          </Box>
         ) : (
           <Box
             sx={{

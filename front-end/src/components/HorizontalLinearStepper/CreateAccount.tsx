@@ -10,11 +10,7 @@ import NameEmail from "../FormComponents/Email";
 import Password from "../FormComponents/Password";
 import { Link, useNavigate } from "react-router-dom";
 
-const steps = [
-  "Seu E-mail",
-  "Seu CPF ou CNPJ",
-  "Sua Senha",
-];
+const steps = ["Seu E-mail", "Seu CPF ou CNPJ", "Sua Senha"];
 
 export default function CreateAccount() {
   const navigate = useNavigate();
@@ -70,18 +66,17 @@ export default function CreateAccount() {
   };
 
   const handleNavigate = (path: string) => {
-    return navigate(path)
-  }
+    return navigate(path);
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-
     e.preventDefault();
 
     handleNavigate("/login");
-  }
+  };
 
   return (
-    <Box sx={{ width: "100%", textAlign: 'center' }}>
+    <Box sx={{ width: "100%", textAlign: "center" }}>
       <Stepper nonLinear activeStep={activeStep}>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
@@ -93,12 +88,27 @@ export default function CreateAccount() {
       </Stepper>
       <form onSubmit={handleSubmit}>
         {allStepsCompleted() ? (
-          <React.Fragment>
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2, justifyConten: "center" }}>
+          <Box
+            sx={{
+              height: "86vh",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                pt: 2,
+                justifyConten: "center",
+              }}
+            >
               <Box sx={{ flex: "1 1 auto" }} />
               <Button type="submit">Criar Conta</Button>
             </Box>
-          </React.Fragment>
+          </Box>
         ) : (
           <Box
             sx={{
@@ -151,9 +161,10 @@ export default function CreateAccount() {
             </Box>
           </Box>
         )}
-        <p>Já possui uma conta ? Entre <Link to={'/login'}>Aqui</Link></p>
+        <p>
+          Já possui uma conta ? Entre <Link to={"/login"}>Aqui</Link>
+        </p>
       </form>
-      
     </Box>
   );
 }

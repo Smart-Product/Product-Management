@@ -186,7 +186,7 @@ export default function PersistentDrawerLeft() {
             onClose={handleCloseUserMenu}
           >
               <MenuItem onClick={handleCloseUserMenu}>
-                <Typography onClick={() => handleNavigate("/cadastro")}>Logout</Typography>
+                <Typography onClick={() => handleNavigate("/login")}>Logout</Typography>
               </MenuItem>
           </Menu>
         </Box>
