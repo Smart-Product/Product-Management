@@ -12,8 +12,8 @@
 
 <p> Nosso papel aqui é mostrar para nossos usuarios que sim! É possivel ter um gerenciamento melhor de seus produtos. 
 Nosso sistema é composto por visualizações com mais detalhamento, edição, exclusão e consultas dos produtos cadastrados.
-A princípio deve-se cadastrar no site com seus dados pessoais e os dados da loja. Ao conseguir logar no nosso site 
-teremos uma página principal intuitiva para começar a cadastrar os produtos que contém na sua loja, fazendo isso uma 
+A princípio deve-se cadastrar no site com seus dados pessoais. Ao conseguir logar no nosso site 
+teremos uma página principal intuitiva para começar a cadastrar os produtos, fazendo isso uma 
  vez o resto é com a gente.</p>
 
 <p> Logo abaixo deixaremos informações de contatos, linguagens para desenvolver esse software e como clonar nosso 
