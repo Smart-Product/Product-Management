@@ -120,7 +120,13 @@ const ProductForms = () => {
             value={product?.precoKg}
             onChange={handleInputChange}
           />
-          <TextField label="Data de validade" />
+          <TextField label="Data de validade" 
+                      type="date"
+                      name="dataValidade"
+                      required
+                      value={product?.dataValidade}
+                      onChange={handleInputChange}
+          />
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <textarea
               name="descricao"

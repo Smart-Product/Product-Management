@@ -18,10 +18,13 @@ export async function postProducts(product: IProduct | null) {
     await axios.post(urlProducts, {
       nome: product?.nome,
       precoKg: product?.precoKg,
-      description: product?.descricao,
+      descricao: product?.descricao,
       quantidadePeca: product?.quantidadePeca,
       pesoPecaKg: product?.pesoPecaKg,
       dataValidade: product?.dataValidade,
+      tipoCorteCarne: {
+        caracteristicaId: product?.tipoCorteCarne
+      }
     });
   } catch (error) {
     console.error(error);
