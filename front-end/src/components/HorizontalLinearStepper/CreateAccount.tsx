@@ -5,9 +5,9 @@ import Step from "@mui/material/Step";
 import StepButton from "@mui/material/StepButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import CpfCnpj from "../FormComponents/CpfCnpj";
-import NameEmail from "../FormComponents/Email";
-import Password from "../FormComponents/Password";
+import CpfCnpj from "../FormComponents/UserForms/CpfCnpj";
+import NameEmail from "../FormComponents/UserForms/Email";
+import Password from "../FormComponents/UserForms/Password";
 import { Link, useNavigate } from "react-router-dom";
 
 const steps = ["Seu E-mail", "Seu CPF ou CNPJ", "Sua Senha"];

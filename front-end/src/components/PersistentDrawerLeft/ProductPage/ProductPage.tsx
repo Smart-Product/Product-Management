@@ -15,6 +15,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchBar from "../../DesignComponents/SearchBar/SearchBar";
+import { useNavigate } from "react-router-dom";
 
 function createData(
   name: string,
@@ -50,6 +51,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   const { row } = props;
   const [open, setOpen] = useState(false);
   const [num, setNum] = useState(0);
+ 
 
   return (
     <React.Fragment>
@@ -132,13 +134,15 @@ const rows = [
 ];
 
 export default function ProductPage() {
+  const navigate = useNavigate();
+  
   return (
     <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "column" }}>
       <Box sx={{display:'flex', justifyContent: "space-between"}}>
         <SearchBar />
 
         <IconButton aria-label="delete" size="large">
-          <AddIcon />
+          <AddIcon onClick={() => navigate("/adicionar_produto")}/>
         </IconButton>
       </Box>
 

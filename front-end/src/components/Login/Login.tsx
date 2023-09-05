@@ -5,8 +5,8 @@ import Step from "@mui/material/Step";
 import StepButton from "@mui/material/StepButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Password from "../FormComponents/Password";
-import Email from "../FormComponents/Email";
+import Password from "../FormComponents/UserForms/Password";
+import Email from "../FormComponents/UserForms/Email";
 import { Link, useNavigate } from "react-router-dom";
 import { IUser } from "../../interface/IUser";
 

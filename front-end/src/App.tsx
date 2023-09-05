@@ -5,8 +5,10 @@ import CreateAccount from "./components/HorizontalLinearStepper/CreateAccount";
 import ProductPage from "./components/PersistentDrawerLeft/ProductPage/ProductPage";
 import SalesPage from "./components/PersistentDrawerLeft/SalesPage/SalesPage";
 import DataProducts from "./components/PersistentDrawerLeft/DataProducts/DataProducts";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { PageLayout } from "./components/PersistentDrawerLeft/PageLayout";
+import ProductForms from "./components/FormComponents/ProductForms/ProductForms";
+import  GlobalStyle  from "../global";
 
 const theme = createTheme();
 function App() {
@@ -14,11 +16,13 @@ function App() {
     <>
       <CssBaseline />
       <ThemeProvider theme={theme}>
+        <GlobalStyle />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<PageLayout children={<ProductPage />} />} />
             <Route path="/sales" element={<PageLayout children={<SalesPage />} />} />
             <Route path="/data" element={<PageLayout children={<DataProducts />} />} />
+            <Route path="/adicionar_produto" element={<ProductForms/>} />
             <Route path="/cadastro" element={<CreateAccount />} />
             <Route path="/login" element={<Login />} />
           </Routes>

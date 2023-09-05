@@ -5,9 +5,9 @@ import Step from "@mui/material/Step";
 import StepButton from "@mui/material/StepButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import NameEmail from "../FormComponents/Email";
-import CpfCnpj from "../FormComponents/CpfCnpj";
-import Password from "../FormComponents/Password";
+import NameEmail from "../FormComponents/UserForms/Email";
+import CpfCnpj from "../FormComponents/UserForms/CpfCnpj";
+import Password from "../FormComponents/UserForms/Password";
 
 
 const steps = [

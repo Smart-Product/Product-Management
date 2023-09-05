@@ -1,10 +1,10 @@
 export interface IProduct {
-    id: number;
-    nome: string;
-    tipoCorte: string;
-    descricao: string;
-    peso: number;
-    quantidade: number;
-    preco: number;
-    validade: string;
+    produtoId?: number;
+    nome?: string;
+    tipoCorteCarne?: number;
+    descricao?: string;
+    pesoPecaKg?: number;
+    quantidadePeca?: number;
+    precoKg?: number;
+    dataValidade?: string;
 }
