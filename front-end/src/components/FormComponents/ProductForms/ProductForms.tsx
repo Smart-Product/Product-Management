@@ -5,15 +5,22 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IMeatTypes } from "../../../interface/IMeatTypes";
 import { IProduct } from "../../../interface/IProduct";
-import { getTypes, postProducts } from "../../../services/ProductServices";
-import { MultiSelect } from "./MultiSelect";
+import {
+  getMeatTypes,
+  getSliceTypes,
+  postProducts,
+} from "../../../services/ProductServices";
 import { ProductFormContainer } from "./ProductForms.styles";
-
-type WithoutProductId = Omit<IProduct, "produtoId">;
+import { MultiSelect } from "./MultiSelect";
+import { ISliceTypes } from "../../../interface/ISliceTypes";
 
 const ProductForms = () => {
   const [product, setProduct] = useState<IProduct | null>(null);
-  const [types, setTypes] = useState<IMeatTypes[] | null>(null)
+  const [listMeatTypes, setListMeatTypes] = useState<IMeatTypes[] | null>(null);
+  const [listSliceTypes, setListSliceTypes] = useState<ISliceTypes[] | null>(
+    null
+  );
+  const [meatType, setMeatType] = useState<string | undefined>(undefined);
   const navigate = useNavigate();
 
   const handleInputChange = (
@@ -23,18 +30,26 @@ const ProductForms = () => {
     setProduct({ ...product, [name]: value });
   };
 
-  console.log(product);
-
   useEffect(() => {
-    
     const fetchTypes = async () => {
-      const dataTypes = await getTypes()
-      
-      setTypes(dataTypes)
-    }
+      const dataTypes = await getMeatTypes();
+
+      setListMeatTypes(dataTypes);
+    };
 
     fetchTypes();
-  }, [])
+  }, []);
+
+  const fetchTypeSlices = async () => {
+    var dataSlices: ISliceTypes[] | null = await getSliceTypes(meatType);
+    setListSliceTypes(dataSlices);
+  };
+
+  const handleTypeMeat = async (meatType: string | undefined) => {
+    setMeatType(meatType);
+
+    await fetchTypeSlices();
+  };
 
   const createProduct = async (product: IProduct) => {
     try {
@@ -78,13 +93,11 @@ const ProductForms = () => {
             justifyContent: "space-between",
           }}
         >
-          <Box
-            sx={{textAlign: "center", width: "98%" }}
-          >
+          <Box sx={{ textAlign: "center", width: "98%" }}>
             <h1>Adicione um produto novo !</h1>
           </Box>
-          <Box sx={{display: 'flex', alignItems: 'center' }}>
-            <IconButton >
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton>
               <CloseIcon onClick={() => navigate("/")} />
             </IconButton>
           </Box>
@@ -100,16 +113,22 @@ const ProductForms = () => {
             onChange={handleInputChange}
           />
 
-          <MultiSelect listTypes={types}/>
-
-          {/* <TextField
-            type="number"
-            name="tipoCorteCarne"
-            label="Corte"
-            required
-            value={product?.tipoCorteCarne}
-            onChange={handleInputChange}
-          /> */}
+          <MultiSelect
+            meatTypes={listMeatTypes}
+            label="Tipos de Carne"
+            handleValue={handleTypeMeat}
+          />
+          
+          {listSliceTypes ? (
+            <MultiSelect
+            meatTypes={listSliceTypes}
+            label="Tipos de Corte"
+            handleValue={handleTypeMeat}
+          />
+          ) : (
+            <TextField  label="Tipos de Corte" disabled/>
+          )}
+          
           <TextField
             type="number"
             name="pesoPecaKg"
@@ -134,12 +153,13 @@ const ProductForms = () => {
             value={product?.precoKg}
             onChange={handleInputChange}
           />
-          <TextField label="Data de validade" 
-                      type="date"
-                      name="dataValidade"
-                      required
-                      value={product?.dataValidade}
-                      onChange={handleInputChange}
+          <TextField
+            label="Data de validade"
+            type="date"
+            name="dataValidade"
+            required
+            value={product?.dataValidade}
+            onChange={handleInputChange}
           />
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <textarea

@@ -1,35 +1,42 @@
-import * as React from 'react';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { IMeatTypes } from '../../../interface/IMeatTypes';
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { useEffect, useState } from "react";
+import { IMeatTypes } from "../../../interface/IMeatTypes";
 
-export const MultiSelect: React.FC<{listTypes: IMeatTypes[] | null}> = ({listTypes}) => {
-  const [age, setAge] = React.useState('');
+interface SelectProps {
+  label: string;
+  meatTypes: IMeatTypes[] | null;
+  handleValue: (value: string | undefined) => void;
+}
+
+export function MultiSelect({ meatTypes, label, handleValue }: SelectProps) {
+  const [meatType, setMeatType] = useState<string | undefined>(undefined);
 
   const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
+    setMeatType(event.target.value);
   };
 
+  useEffect(() => {
+
+    handleValue(meatType);
+
+  }, [meatType]);
+  
   return (
     <FormControl size="medium">
-      <InputLabel id="demo-select-small-label">Tipo de Corte</InputLabel>
+      <InputLabel id="demo-select-small-label">{label}</InputLabel>
       <Select
         labelId="demo-select-small-label"
         id="demo-select-small"
-        value={age}
-        label="Age"
+        value={meatType}
+        label="Tipo de Carne"
         onChange={handleChange}
-        sx={{width: "220px"}}
+        sx={{ width: "220px" }}
       >
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
-        {listTypes?.map((type, index) => (
-          <>
-            <MenuItem key={index}>{type.descricaoEspecifica}</MenuItem>
-          </>
+        {meatTypes?.map((type, index) => (
+          <MenuItem key={index} value={type.value}>{type.value}</MenuItem>
         ))}
       </Select>
     </FormControl>

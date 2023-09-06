@@ -33,12 +33,23 @@ export async function postProducts(product: IProduct | null) {
   }
 }
 
-export async function getTypes(): Promise<IMeatTypes[] | null>{
+export async function getMeatTypes(): Promise<IMeatTypes[] | null>{
   try {
     const response = await axios.get(`${urlApi}/caracteristica`)
     return response.data
   } catch (error) {
     console.error(error)
     throw error
+  }
+}
+
+export async function getSliceTypes(meatType: string | undefined){
+  try {
+    const response = await axios.get(`${urlApi}/caracteristica/descricao/${meatType}`);
+    return response.data; 
+
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 }

@@ -3,6 +3,7 @@ package io.github.smart.product.management.controller.api;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import io.github.smart.product.management.service.CaracteristicaService;
 
 @RestController
 @RequestMapping("/api/caracteristica")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CaracteristicaApi {
 
     @Autowired
