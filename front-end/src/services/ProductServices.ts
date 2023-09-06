@@ -1,11 +1,12 @@
 import axios from "axios";
 import { IProduct } from "../interface/IProduct";
+import { IMeatTypes } from "../interface/IMeatTypes";
 
-const urlProducts = "http://localhost:8000/api/produtos";
+const urlApi = "http://localhost:8000/api";
 
 export async function getProducts(): Promise<IProduct[]> {
   try {
-    const response = await axios.get(urlProducts);
+    const response = await axios.get(`${urlApi}/produtos`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -15,7 +16,7 @@ export async function getProducts(): Promise<IProduct[]> {
 
 export async function postProducts(product: IProduct | null) {
   try {
-    await axios.post(urlProducts, {
+    await axios.post(`${urlApi}/produtos`, {
       nome: product?.nome,
       precoKg: product?.precoKg,
       descricao: product?.descricao,
@@ -29,5 +30,15 @@ export async function postProducts(product: IProduct | null) {
   } catch (error) {
     console.error(error);
     throw error;
+  }
+}
+
+export async function getTypes(): Promise<IMeatTypes[] | null>{
+  try {
+    const response = await axios.get(`${urlApi}/caracteristica`)
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw error
   }
 }

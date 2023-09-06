@@ -3,8 +3,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { IMeatTypes } from '../../../interface/IMeatTypes';
 
-export default function SelectSmall() {
+export const MultiSelect: React.FC<{listTypes: IMeatTypes[] | null}> = ({listTypes}) => {
   const [age, setAge] = React.useState('');
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -25,9 +26,11 @@ export default function SelectSmall() {
         <MenuItem value="">
           <em>None</em>
         </MenuItem>
-        <MenuItem value={10}>1</MenuItem>
-        <MenuItem value={20}>2</MenuItem>
-        <MenuItem value={30}>3</MenuItem>
+        {listTypes?.map((type, index) => (
+          <>
+            <MenuItem key={index}>{type.descricaoEspecifica}</MenuItem>
+          </>
+        ))}
       </Select>
     </FormControl>
   );

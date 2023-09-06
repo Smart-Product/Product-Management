@@ -1,16 +1,19 @@
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Button, IconButton, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { IMeatTypes } from "../../../interface/IMeatTypes";
 import { IProduct } from "../../../interface/IProduct";
-import { postProducts } from "../../../services/ProductServices";
+import { getTypes, postProducts } from "../../../services/ProductServices";
+import { MultiSelect } from "./MultiSelect";
 import { ProductFormContainer } from "./ProductForms.styles";
 
 type WithoutProductId = Omit<IProduct, "produtoId">;
 
 const ProductForms = () => {
   const [product, setProduct] = useState<IProduct | null>(null);
+  const [types, setTypes] = useState<IMeatTypes[] | null>(null)
   const navigate = useNavigate();
 
   const handleInputChange = (
@@ -21,6 +24,17 @@ const ProductForms = () => {
   };
 
   console.log(product);
+
+  useEffect(() => {
+    
+    const fetchTypes = async () => {
+      const dataTypes = await getTypes()
+      
+      setTypes(dataTypes)
+    }
+
+    fetchTypes();
+  }, [])
 
   const createProduct = async (product: IProduct) => {
     try {
@@ -86,16 +100,16 @@ const ProductForms = () => {
             onChange={handleInputChange}
           />
 
-          {/* <MultiSelect /> */}
+          <MultiSelect listTypes={types}/>
 
-          <TextField
+          {/* <TextField
             type="number"
             name="tipoCorteCarne"
             label="Corte"
             required
             value={product?.tipoCorteCarne}
             onChange={handleInputChange}
-          />
+          /> */}
           <TextField
             type="number"
             name="pesoPecaKg"
