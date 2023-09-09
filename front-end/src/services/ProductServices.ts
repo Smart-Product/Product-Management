@@ -46,6 +46,7 @@ export async function getMeatTypes(): Promise<IMeatTypes[] | null>{
 export async function getSliceTypes(meatType: string | undefined){
   try {
     const response = await axios.get(`${urlApi}/caracteristica/descricao/${meatType}`);
+    console.log('service: ' + meatType);
     return response.data; 
 
   } catch (error) {

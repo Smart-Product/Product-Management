@@ -19,29 +19,21 @@ import { useNavigate } from "react-router-dom";
 
 function createData(
   name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-  price: number
+  pesoPecaKg: number,
+  quantidadePeca: number,
+  precoKg: number,
 ) {
   return {
     name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
+    pesoPecaKg,
+    quantidadePeca,
+    precoKg,
     history: [
       {
-        date: "2020-01-05",
-        customerId: "11091700",
-        amount: 3,
-      },
-      {
-        date: "2020-01-02",
-        customerId: "Anonymous",
-        amount: 1,
+        dataValidade: "2020-01-05",
+        tipoCarne: "CARNE BOVINA",
+        tipoCorteCarne: "Picanha",
+        descricao: " Descricao do produto",
       },
     ],
   };
@@ -51,7 +43,6 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   const { row } = props;
   const [open, setOpen] = useState(false);
   const [num, setNum] = useState(0);
- 
 
   return (
     <React.Fragment>
@@ -68,10 +59,9 @@ function Row(props: { row: ReturnType<typeof createData> }) {
         <TableCell component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell align="center">{row.calories}</TableCell>
-        <TableCell align="center">{row.fat}</TableCell>
-        <TableCell align="center">{row.carbs}</TableCell>
-        <TableCell align="center">{row.protein}</TableCell>
+        <TableCell align="center">{row.pesoPecaKg} kg</TableCell>
+        <TableCell align="center">{row.quantidadePeca}</TableCell>
+        <TableCell align="center">{row.precoKg}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -97,21 +87,25 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 <TableHead>
                   <TableRow>
                     <TableCell>Data</TableCell>
-                    <TableCell>Fornecedor</TableCell>
+                    <TableCell>Tipo de Carne</TableCell>
+                    <TableCell>Tipo de Corte</TableCell>
                     <TableCell align="center">Descrição</TableCell>
                     <TableCell align="right">Preço Total ($)</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
+                    <TableRow key={historyRow.dataValidade}>
                       <TableCell component="th" scope="row">
-                        {historyRow.date}
+                        {historyRow.dataValidade}
                       </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="center" sx={{width: "40%"}}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum natus dicta quasi deserunt neque blanditiis alias consectetur, officia nemo esse non, tempora nam adipisci quis eos veritatis sunt impedit molestias!</TableCell>
+                      <TableCell> {historyRow.tipoCarne} </TableCell>
+                      <TableCell> {historyRow.tipoCorteCarne} </TableCell>
+                      <TableCell align="center" sx={{ width: "40%" }}>
+                        {historyRow.descricao}
+                      </TableCell>
                       <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
+                        {Math.round(row.quantidadePeca * row.pesoPecaKg * 100) / 100}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -126,23 +120,22 @@ function Row(props: { row: ReturnType<typeof createData> }) {
 }
 
 const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0, 3.99),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3, 4.99),
-  createData("Eclair", 262, 16.0, 24, 6.0, 3.79),
-  createData("Cupcake", 305, 3.7, 67, 4.3, 2.5),
-  createData("Gingerbread", 356, 16.0, 49, 3.9, 1.5),
+  createData("Picanha", 10, 6, 80),
+  createData("Picanha", 10, 6, 80),
+  createData("Picanha", 10, 6, 80),
+  createData("Picanha", 10, 6, 80),
 ];
 
 export default function ProductPage() {
   const navigate = useNavigate();
-  
+
   return (
     <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "column" }}>
-      <Box sx={{display:'flex', justifyContent: "space-between"}}>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <SearchBar />
 
         <IconButton aria-label="delete" size="large">
-          <AddIcon onClick={() => navigate("/adicionar_produto")}/>
+          <AddIcon onClick={() => navigate("/adicionar_produto")} />
         </IconButton>
       </Box>
 
@@ -154,7 +147,6 @@ export default function ProductPage() {
               <TableCell>Seus Produtos</TableCell>
               <TableCell align="center">Peso/kg</TableCell>
               <TableCell align="center">Quantidade</TableCell>
-              <TableCell align="center">Peso</TableCell>
               <TableCell align="center">Preço</TableCell>
             </TableRow>
           </TableHead>

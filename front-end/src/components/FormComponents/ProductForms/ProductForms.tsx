@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, IconButton, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Button, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IMeatTypes } from "../../../interface/IMeatTypes";
 import { IProduct } from "../../../interface/IProduct";
@@ -11,16 +11,65 @@ import {
   postProducts,
 } from "../../../services/ProductServices";
 import { ProductFormContainer } from "./ProductForms.styles";
-import { MultiSelect } from "./MultiSelect";
 import { ISliceTypes } from "../../../interface/ISliceTypes";
+
+
+interface SelectProps {
+  label: string;
+  meatTypes: IMeatTypes[] | null;
+  handleValue: (value: string | null) => void;
+}
+
+function MultiSelect({ meatTypes, label, handleValue }: SelectProps) {
+  const [meatType, setMeatType] = useState<string | null>(null);
+  const [sliceType, setSliceType] = useState<string | null>(null);
+
+  const handleChange = (event: SelectChangeEvent) => {
+    if(label == "Tipos de Carne"){
+    const selectedValue = event.target.value;
+    setMeatType(selectedValue)
+    return;
+    }else{
+      const selectedValue = event.target.value;
+      setSliceType(selectedValue)
+    }
+  };
+
+  useEffect(() => {
+    console.log('select: ' + meatType);
+    handleValue(meatType);
+  }, [meatType]);
+
+  return (
+    <FormControl size="medium">
+      <InputLabel id="demo-select-small-label">{label}</InputLabel>
+      <Select
+        labelId="demo-select-small-label"
+        id="demo-select-small"
+        value={meatType ?? ""}
+        label="Tipo de Carne"
+        onChange={handleChange}
+        sx={{ width: "220px" }}
+      >
+        {meatTypes?.map((type, index) => (
+          <MenuItem key={index} value={type.value}>
+            {type.value}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+}
+
 
 const ProductForms = () => {
   const [product, setProduct] = useState<IProduct | null>(null);
   const [listMeatTypes, setListMeatTypes] = useState<IMeatTypes[] | null>(null);
-  const [listSliceTypes, setListSliceTypes] = useState<ISliceTypes[] | null>(
-    null
+  const [listSliceTypes, setListSliceTypes] = useState<ISliceTypes[]>(
+    []
   );
   const [meatType, setMeatType] = useState<string | undefined>(undefined);
+  const [sliceType, setSliceType] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleInputChange = (
@@ -30,25 +79,35 @@ const ProductForms = () => {
     setProduct({ ...product, [name]: value });
   };
 
-  useEffect(() => {
+  useMemo(() => {
     const fetchTypes = async () => {
       const dataTypes = await getMeatTypes();
-
-      setListMeatTypes(dataTypes);
+      setListMeatTypes(dataTypes)
     };
 
     fetchTypes();
   }, []);
 
-  const fetchTypeSlices = async () => {
-    var dataSlices: ISliceTypes[] | null = await getSliceTypes(meatType);
+  const fetchTypeSlices = async (meatType: string) => {
+    const dataSlices: ISliceTypes[] = await getSliceTypes(meatType);
     setListSliceTypes(dataSlices);
   };
 
-  const handleTypeMeat = async (meatType: string | undefined) => {
+  const handleTypeMeat = async (meatType: string | null) => {
     setMeatType(meatType);
 
-    await fetchTypeSlices();
+    console.log('form : ', meatType)
+
+    await fetchTypeSlices(meatType);
+
+    //inserir este tipo de carne no formulario
+  };
+
+  const handleTypeSlice = async (sliceType: string) => {
+
+    setProduct({ ...product, tipoCorteCarne: sliceType})
+
+    //todo: inserir este tipo de corte no formulario
   };
 
   const createProduct = async (product: IProduct) => {
@@ -97,8 +156,8 @@ const ProductForms = () => {
             <h1>Adicione um produto novo !</h1>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton>
-              <CloseIcon onClick={() => navigate("/")} />
+            <IconButton onClick={() => navigate("/")}>
+              <CloseIcon />
             </IconButton>
           </Box>
         </Box>
@@ -118,17 +177,17 @@ const ProductForms = () => {
             label="Tipos de Carne"
             handleValue={handleTypeMeat}
           />
-          
-          {listSliceTypes ? (
+
+          {listSliceTypes?.length > 0 ? (
             <MultiSelect
-            meatTypes={listSliceTypes}
-            label="Tipos de Corte"
-            handleValue={handleTypeMeat}
-          />
+              meatTypes={listSliceTypes}
+              label="Tipos de Corte"
+              handleValue={handleTypeSlice}
+            />
           ) : (
-            <TextField  label="Tipos de Corte" disabled/>
+            <TextField label="Tipos de Corte" disabled />
           )}
-          
+
           <TextField
             type="number"
             name="pesoPecaKg"
