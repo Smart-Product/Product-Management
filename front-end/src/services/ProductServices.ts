@@ -15,6 +15,9 @@ export async function getProducts(): Promise<IProduct[]> {
 }
 
 export async function postProducts(product: IProduct) {
+  if(product.tipoCorteCarne?.caracteristicaId !== 0){
+    
+  }
   try {
     await axios.post(`${urlApi}/produtos`, {
       dataValidade: product.dataValidade,
@@ -32,7 +35,7 @@ export async function postProducts(product: IProduct) {
   }
 }
 
-export async function getMeatTypes(): Promise<IMeatTypes[] | null>{
+export async function getMeatTypes(): Promise<IMeatTypes[]>{
   try {
     const response = await axios.get(`${urlApi}/caracteristica`)
     return response.data
@@ -42,7 +45,7 @@ export async function getMeatTypes(): Promise<IMeatTypes[] | null>{
   }
 }
 
-export async function getSliceTypes(meatType: string | undefined){
+export async function getSliceTypes(meatType: string | null){
   try {
     const response = await axios.get(`${urlApi}/caracteristica/descricao/${meatType}`);
     return response.data; 

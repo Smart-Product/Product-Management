@@ -9,6 +9,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { PageLayout } from "./components/PersistentDrawerLeft/PageLayout";
 import ProductForms from "./components/FormComponents/ProductForms/ProductForms";
 import  GlobalStyle  from "../global";
+import { ToastContainer } from 'react-toastify';
+
 
 const theme = createTheme();
 function App() {
@@ -17,6 +19,7 @@ function App() {
       <CssBaseline />
       <ThemeProvider theme={theme}>
         <GlobalStyle />
+        <ToastContainer/>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<PageLayout children={<ProductPage />} />} />
