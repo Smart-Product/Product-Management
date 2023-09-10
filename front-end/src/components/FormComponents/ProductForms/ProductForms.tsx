@@ -17,12 +17,12 @@ import { ISliceTypes } from "../../../interface/ISliceTypes";
 interface SelectProps {
   label: string;
   typesList?: IMeatTypes[] | null;
-  handleValue: (value: string | null) => void;
+  handleValue: (value: string | number | null) => void;
 }
 
 function MultiSelect({ typesList, label, handleValue }: SelectProps) {
   const [meatType, setMeatType] = useState<string | null>(null);
-  const [sliceType, setSliceType] = useState<string | null>(null);
+  const [sliceType, setSliceType] = useState<number | null>(null);
 
   const isMeatType = label == "Tipos de Carne" ? true : false;
 
@@ -33,7 +33,7 @@ function MultiSelect({ typesList, label, handleValue }: SelectProps) {
       return;
     } else {
       const selectedValue = event.target.value;
-      setSliceType(selectedValue)
+      setSliceType(parseInt(selectedValue))
 
       handleValue(selectedValue)
     }
@@ -74,7 +74,6 @@ const ProductForms = () => {
     []
   );
   const [meatType, setMeatType] = useState<string | undefined>(undefined);
-  const [sliceType, setSliceType] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleInputChange = (
@@ -84,7 +83,7 @@ const ProductForms = () => {
     let numericValue: string | number = value;
   
     if (e.target.type === "number") {
-      numericValue = parseFloat(value);
+      numericValue = parseInt(value);
     }
   
     setProduct({ ...product, [name]: numericValue });
@@ -119,7 +118,7 @@ const ProductForms = () => {
 
   const handleTypeSlice = (sliceType: number) => {
 
-    setProduct({ ...product, tipoCorteCarne: { caracteristicaId: sliceType } })
+    setProduct({ ...product, tipoCorteCarne: {caracteristicaId: sliceType }})
 
     //todo: inserir este tipo de corte no formulario
   };
@@ -179,6 +178,7 @@ const ProductForms = () => {
         <ProductFormContainer onSubmit={handleSubmit}>
           <TextField
             label="Nome do produto"
+            type="text"
             name="nome"
             required
             placeholder="Nome..."

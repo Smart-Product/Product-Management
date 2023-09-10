@@ -6,7 +6,7 @@ export interface IProduct {
     quantidadePeca: number;
     precoKg: number;
     dataValidade: string;
-    tipoCorteCarne: {
-        caracteristicaId : number
+    tipoCorteCarne?: {
+        caracteristicaId? : number
     };
 }

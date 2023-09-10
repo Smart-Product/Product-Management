@@ -14,20 +14,17 @@ export async function getProducts(): Promise<IProduct[]> {
   }
 }
 
-export async function postProducts(product: IProduct | null) {
+export async function postProducts(product: IProduct) {
   try {
     await axios.post(`${urlApi}/produtos`, {
-      nome: product?.nome,
-      precoKg: product?.precoKg,
-      descricao: product?.descricao,
-      quantidadePeca: product?.quantidadePeca,
-      pesoPecaKg: product?.pesoPecaKg,
-      dataValidade: product?.dataValidade,
-      tipoCorteCarne: {
-        caracteristicaId: product?.tipoCorteCarne
-      }
+      dataValidade: product.dataValidade,
+      descricao: product.descricao,
+      nome: product.nome,
+      pesoPecaKg: product.pesoPecaKg,
+      precoKg: product.precoKg,
+      quantidadePeca: product.quantidadePeca,
+      tipoCorteCarne: product.tipoCorteCarne
     });
-    console.log(product)
   } catch (error) {
     console.error(error);
     console.log(product)
