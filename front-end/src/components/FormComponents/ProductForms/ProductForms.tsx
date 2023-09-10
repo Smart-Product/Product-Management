@@ -16,22 +16,26 @@ import { ISliceTypes } from "../../../interface/ISliceTypes";
 
 interface SelectProps {
   label: string;
-  meatTypes: IMeatTypes[] | null;
+  typesList?: IMeatTypes[] | null;
   handleValue: (value: string | null) => void;
 }
 
-function MultiSelect({ meatTypes, label, handleValue }: SelectProps) {
+function MultiSelect({ typesList, label, handleValue }: SelectProps) {
   const [meatType, setMeatType] = useState<string | null>(null);
   const [sliceType, setSliceType] = useState<string | null>(null);
 
+  const isMeatType = label == "Tipos de Carne" ? true : false;
+
   const handleChange = (event: SelectChangeEvent) => {
-    if(label == "Tipos de Carne"){
-    const selectedValue = event.target.value;
-    setMeatType(selectedValue)
-    return;
-    }else{
+    if (label == "Tipos de Carne") {
+      const selectedValue = event.target.value;
+      setMeatType(selectedValue)
+      return;
+    } else {
       const selectedValue = event.target.value;
       setSliceType(selectedValue)
+
+      handleValue(selectedValue)
     }
   };
 
@@ -46,16 +50,17 @@ function MultiSelect({ meatTypes, label, handleValue }: SelectProps) {
       <Select
         labelId="demo-select-small-label"
         id="demo-select-small"
-        value={meatType ?? ""}
+        value={label == "Tipos de Carne" ? meatType : sliceType}
         label="Tipo de Carne"
         onChange={handleChange}
         sx={{ width: "220px" }}
       >
-        {meatTypes?.map((type, index) => (
-          <MenuItem key={index} value={type.value}>
+        {typesList?.map((type, index) => (
+          <MenuItem key={index} value={isMeatType ? type.value : type.key}>
             {type.value}
           </MenuItem>
         ))}
+
       </Select>
     </FormControl>
   );
@@ -63,7 +68,7 @@ function MultiSelect({ meatTypes, label, handleValue }: SelectProps) {
 
 
 const ProductForms = () => {
-  const [product, setProduct] = useState<IProduct | null>(null);
+  const [product, setProduct] = useState<IProduct>();
   const [listMeatTypes, setListMeatTypes] = useState<IMeatTypes[] | null>(null);
   const [listSliceTypes, setListSliceTypes] = useState<ISliceTypes[]>(
     []
@@ -76,8 +81,16 @@ const ProductForms = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
+    let numericValue: string | number = value;
+  
+    if (e.target.type === "number") {
+      numericValue = parseFloat(value);
+    }
+  
+    setProduct({ ...product, [name]: numericValue });
   };
+
+  console.log(product)
 
   useMemo(() => {
     const fetchTypes = async () => {
@@ -91,6 +104,7 @@ const ProductForms = () => {
   const fetchTypeSlices = async (meatType: string) => {
     const dataSlices: ISliceTypes[] = await getSliceTypes(meatType);
     setListSliceTypes(dataSlices);
+
   };
 
   const handleTypeMeat = async (meatType: string | null) => {
@@ -103,9 +117,9 @@ const ProductForms = () => {
     //inserir este tipo de carne no formulario
   };
 
-  const handleTypeSlice = async (sliceType: string) => {
+  const handleTypeSlice = (sliceType: number) => {
 
-    setProduct({ ...product, tipoCorteCarne: sliceType})
+    setProduct({ ...product, tipoCorteCarne: { caracteristicaId: sliceType } })
 
     //todo: inserir este tipo de corte no formulario
   };
@@ -173,53 +187,55 @@ const ProductForms = () => {
           />
 
           <MultiSelect
-            meatTypes={listMeatTypes}
+            typesList={listMeatTypes}
             label="Tipos de Carne"
             handleValue={handleTypeMeat}
+
           />
 
           {listSliceTypes?.length > 0 ? (
             <MultiSelect
-              meatTypes={listSliceTypes}
+              typesList={listSliceTypes}
               label="Tipos de Corte"
               handleValue={handleTypeSlice}
+
             />
           ) : (
             <TextField label="Tipos de Corte" disabled />
           )}
 
-          <TextField
-            type="number"
-            name="pesoPecaKg"
-            label="Peso em kg"
-            required
-            value={product?.pesoPecaKg}
-            onChange={handleInputChange}
-          />
-          <TextField
-            type="number"
-            name="quantidadePeca"
-            label="Quantidade"
-            required
-            value={product?.quantidadePeca}
-            onChange={handleInputChange}
-          />
-          <TextField
-            type="number"
-            name="precoKg"
-            label="Preço por kilo"
-            required
-            value={product?.precoKg}
-            onChange={handleInputChange}
-          />
-          <TextField
-            label="Data de validade"
-            type="date"
-            name="dataValidade"
-            required
-            value={product?.dataValidade}
-            onChange={handleInputChange}
-          />
+            <TextField
+              type="number"
+              name="pesoPecaKg"
+              label="Peso em kg"
+              required
+              value={product?.pesoPecaKg}
+              onChange={handleInputChange}
+            />
+            <TextField
+              type="number"
+              name="quantidadePeca"
+              label="Quantidade"
+              required
+              value={product?.quantidadePeca}
+              onChange={handleInputChange}
+            />
+            <TextField
+              type="number"
+              name="precoKg"
+              label="Preço por kilo"
+              required
+              value={product?.precoKg}
+              onChange={handleInputChange}
+            />
+            <TextField
+              label="Data de validade"
+              type="date"
+              name="dataValidade"
+              required
+              value={product?.dataValidade}
+              onChange={handleInputChange}
+            />
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <textarea
               name="descricao"
