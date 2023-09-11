@@ -5,8 +5,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -18,7 +16,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
-import * as React from "react";
+import React from "react";
 
 import StoreIcon from "@mui/icons-material/Store";
 import { Avatar, Menu, MenuItem } from "@mui/material";
@@ -78,8 +76,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-export default function PersistentDrawerLeft() {
-
+export const PageLayout: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -104,13 +103,11 @@ export default function PersistentDrawerLeft() {
   };
 
   const handleNavigate = (path: string) => {
-    return navigate(path)
-  }
-
+    return navigate(path);
+  };
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
+    <Box sx={{ display: "flex", mt: 5 }}>
       <AppBar
         position="fixed"
         open={open}
@@ -185,12 +182,15 @@ export default function PersistentDrawerLeft() {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-              <MenuItem onClick={handleCloseUserMenu}>
-                <Typography onClick={() => handleNavigate("/login")}>Logout</Typography>
-              </MenuItem>
+            <MenuItem onClick={handleCloseUserMenu}>
+              <Typography onClick={() => handleNavigate("/login")}>
+                Logout
+              </Typography>
+            </MenuItem>
           </Menu>
         </Box>
       </AppBar>
+
       <Drawer
         sx={{
           width: drawerWidth,
@@ -215,16 +215,43 @@ export default function PersistentDrawerLeft() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Vendas", "Estoque", "Option 1", "Option 2"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <MailIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Produtos"}
+                onClick={() => handleNavigate("/")}
+              />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Vendas"}
+                onClick={() => handleNavigate("/sales")}
+              />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <MailIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Datas"}
+                onClick={() => handleNavigate("/data")}
+              />
+            </ListItemButton>
+          </ListItem>
+          
         </List>
         <Divider />
         <List>
@@ -240,9 +267,8 @@ export default function PersistentDrawerLeft() {
           ))}
         </List>
       </Drawer>
-      <Main open={open}>
-        <DrawerHeader />
-      </Main>
+
+      <Main open={open}>{children}</Main>
     </Box>
   );
-}
+};
