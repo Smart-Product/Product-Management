@@ -14,6 +14,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "tb_produto")
 public class Produto {
@@ -25,6 +34,7 @@ public class Produto {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario")
+    @JsonIgnore
     private Usuario usuario;
 
     @Column(name = "nm_produto")
@@ -56,75 +66,4 @@ public class Produto {
     @NotNull(message = "{campo.data.validade.obrigatorio}")
     private LocalDate dataValidade;
 
-    public Integer getProdutoId() {
-        return produtoId;
-    }
-
-    public void setProdutoId(Integer produtoId) {
-        this.produtoId = produtoId;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public Caracteristica getTipoCorteCarne() {
-        return tipoCorteCarne;
-    }
-
-    public void setTipoCorteCarne(Caracteristica tipoCorteCarne) {
-        this.tipoCorteCarne = tipoCorteCarne;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public Double getPesoPecaKg() {
-        return pesoPecaKg;
-    }
-
-    public void setPesoPecaKg(Double pesoPecaKg) {
-        this.pesoPecaKg = pesoPecaKg;
-    }
-
-    public Integer getQuantidadePeca() {
-        return quantidadePeca;
-    }
-
-    public void setQuantidadePeca(Integer quantidadePeca) {
-        this.quantidadePeca = quantidadePeca;
-    }
-
-    public Double getPrecoKg() {
-        return precoKg;
-    }
-
-    public void setPrecoKg(Double precoKg) {
-        this.precoKg = precoKg;
-    }
-
-    public LocalDate getDataValidade() {
-        return dataValidade;
-    }
-
-    public void setDataValidade(LocalDate dataValidade) {
-        this.dataValidade = dataValidade;
-    }
 }
