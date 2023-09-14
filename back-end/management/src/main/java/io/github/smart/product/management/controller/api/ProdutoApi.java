@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.smart.product.management.annotations.TokenRequired;
 import io.github.smart.product.management.model.Produto;
 import io.github.smart.product.management.repository.ProdutoRepository;
 import io.github.smart.product.management.service.ProdutoService;
@@ -25,7 +26,7 @@ public class ProdutoApi {
 
     @Autowired
     private ProdutoRepository produtoRepository;
-    
+
     @Autowired
     private ProdutoService service;
 
@@ -37,11 +38,11 @@ public class ProdutoApi {
          */
         return ResponseEntity.status(HttpStatus.CREATED).body(produtoRepository.save(produto));
     }
-    
+
+    @TokenRequired
     @GetMapping
-	public List<Produto> buscarTodos(Produto filter) {
-		return service.buscarTodos(filter);
-	}
-    
-    
+    public List<Produto> buscarTodos(Produto filter) {
+        return service.buscarTodos(filter);
+    }
+
 }

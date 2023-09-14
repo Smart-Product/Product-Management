@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.smart.product.management.dto.KeyValueDto;
-import io.github.smart.product.management.model.Caracteristica;
 import io.github.smart.product.management.service.CaracteristicaService;
 
 @RestController
@@ -30,5 +29,5 @@ public class CaracteristicaApi {
     public List<KeyValueDto> findByTipoCorteCarne(@PathVariable String descricao) {
         return caracteristicaService.findByTipoCorteCarne(descricao);
     }
-    
+
 }

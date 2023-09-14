@@ -6,12 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.github.smart.product.management.dto.KeyValueDto;
-import io.github.smart.product.management.model.Caracteristica;
 import io.github.smart.product.management.repository.CaracteristicaRepository;
 
 @Service
 public class CaracteristicaService {
-    
+
     @Autowired
     private CaracteristicaRepository caracteristicaRepository;
 
