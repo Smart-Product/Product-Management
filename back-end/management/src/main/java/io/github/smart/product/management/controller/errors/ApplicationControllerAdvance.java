@@ -11,13 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ApplicationControllerAdvance {
 
-	@ExceptionHandler(RuntimeException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ApiErrors handlerRuntimeException(RuntimeException ex) {
-		String messageError = ex.getMessage();
-		return new ApiErrors(messageError);
-	}
-
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ApiErrors handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
