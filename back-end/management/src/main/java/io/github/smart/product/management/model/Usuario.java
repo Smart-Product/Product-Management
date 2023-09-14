@@ -17,6 +17,13 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import io.github.smart.product.management.dto.UsuarioDto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "tb_usuario")
 public class Usuario {
@@ -47,59 +54,7 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<Produto> produtos;
 
-    public Usuario() {
-    }
-
-    public Usuario(Integer usuarioId, String nome, String cpf, String email, String senha) {
-        this.usuarioId = usuarioId;
-        this.nome = nome;
-        this.cpf = cpf;
-        this.email = email;
-        this.senha = senha;
-    }
-
-    public UsuarioDto convertDto() {
-        return new UsuarioDto(usuarioId, nome, cpf, email, produtos);
-    }
-
     public String setCPF(String cpf) {
         return this.cpf = cpf.replaceAll("\\D", "");
     }
-
-    public Integer getUsuarioId() {
-        return usuarioId;
-    }
-
-    public void setUsuarioId(Integer usuarioId) {
-        this.usuarioId = usuarioId;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
 }

@@ -9,14 +9,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.smart.product.management.annotations.TokenRequired;
 import io.github.smart.product.management.model.Produto;
-import io.github.smart.product.management.repository.ProdutoRepository;
 import io.github.smart.product.management.service.ProdutoService;
 
 @RestController
@@ -25,24 +26,28 @@ import io.github.smart.product.management.service.ProdutoService;
 public class ProdutoApi {
 
     @Autowired
-    private ProdutoRepository produtoRepository;
-
-    @Autowired
     private ProdutoService service;
 
     @PostMapping
     public ResponseEntity<Produto> cadastrar(@RequestBody @Valid Produto produto) {
-        /*
-         * todo: fazer o jwt pra pegar o usuario logado
-         * produto.setUsuario(jwt.getUsuario);
-         */
-        return ResponseEntity.status(HttpStatus.CREATED).body(produtoRepository.save(produto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(produto));
     }
 
     @TokenRequired
     @GetMapping
-    public List<Produto> buscarTodos(Produto filter) {
-        return service.buscarTodos(filter);
+    public ResponseEntity<List<Produto>> buscarTodos(Produto filter) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(service.buscarTodos(filter));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Produto> obterDadosPorId(@PathVariable Integer id) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(service.obterDadosPorId(id));
+    }
+
+    @PutMapping
+    public ResponseEntity editar(@Valid @RequestBody Produto produto) {
+        service.editar(produto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
 }
