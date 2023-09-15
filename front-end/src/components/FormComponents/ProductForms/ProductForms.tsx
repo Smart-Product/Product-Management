@@ -11,7 +11,7 @@ import {
   getSliceTypes,
   postProducts,
 } from "../../../services/ProductServices";
-import { ProductFormContainer } from "./ProductForms.styles";
+import { ColumnWrapper, ProductFormContainer } from "./ProductForms.styles";
 import { ProductCreateSuccess, formError } from "../../../utils/utils";
 
 
@@ -175,97 +175,107 @@ const ProductForms = () => {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column"
+      }}
+    >
       <Box
         sx={{
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
+          width: "100vw",
+          justifyContent: "space-between",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            width: "100vw",
-            justifyContent: "space-between",
-          }}
-        >
-          <Box sx={{ textAlign: "center", width: "98%" }}>
-            <h1>Adicione um produto novo !</h1>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => navigate("/")}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
+        <Box sx={{ textAlign: "center", width: "98%" }}>
+          <h1>Adicione um produto novo !</h1>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton onClick={() => navigate("/")}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+      </Box>
+
+      <ProductFormContainer onSubmit={handleSubmit}>
+
+        <Box sx={{ display: 'flex' }}>
+          <ColumnWrapper>
+            <TextField
+              label="Nome do produto"
+              type="text"
+              name="nome"
+              required
+              placeholder="Nome..."
+              value={product?.nome}
+              onChange={handleInputChange}
+            />
+
+            {listMeatTypes?.length > 0 ? (
+              <MultiSelect
+                typesList={listMeatTypes}
+                label="Tipos de Carne"
+                handleMeat={handleTypeMeat}
+                clear={clear}
+              />
+            ) : (
+              <TextField label="Tipos de Carne" disabled />
+            )}
+
+
+            {listSliceTypes?.length > 0 ? (
+              <MultiSelect
+                typesList={listSliceTypes}
+                label="Tipos de Corte"
+                handleSlice={handleTypeSlice}
+                clear={clear}
+
+              />
+            ) : (
+              <TextField label="Escolha um tipo de Carne" disabled />
+            )}
+          </ColumnWrapper>
+
+
+          <ColumnWrapper>
+            <TextField
+              type="number"
+              name="pesoPecaKg"
+              label="Peso em kg"
+              required
+              value={product?.pesoPecaKg}
+              onChange={handleInputChange}
+            />
+            <TextField
+              type="number"
+              name="quantidadePeca"
+              label="Quantidade"
+              required
+              value={product?.quantidadePeca}
+              onChange={handleInputChange}
+            />
+            <TextField
+              type="number"
+              name="precoKg"
+              label="Preço por kilo"
+              required
+              value={product?.precoKg}
+              onChange={handleInputChange}
+            />
+          </ColumnWrapper>
         </Box>
 
-        <ProductFormContainer onSubmit={handleSubmit}>
-          <TextField
-            label="Nome do produto"
-            type="text"
-            name="nome"
-            required
-            placeholder="Nome..."
-            value={product?.nome}
-            onChange={handleInputChange}
-          />
+        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2, mb: 2 }}>
 
-          {listMeatTypes?.length > 0 ? (
-            <MultiSelect
-              typesList={listMeatTypes}
-              label="Tipos de Carne"
-              handleMeat={handleTypeMeat}
-              clear={clear}
-            />
-          ) : (
-            <TextField label="Tipos de Carne" disabled />
-          )}
-
-
-          {listSliceTypes?.length > 0 ? (
-            <MultiSelect
-              typesList={listSliceTypes}
-              label="Tipos de Corte"
-              handleSlice={handleTypeSlice}
-              clear={clear}
-
-            />
-          ) : (
-            <TextField label="Escolha um tipo de Carne" disabled />
-          )}
-
-          <TextField
-            type="number"
-            name="pesoPecaKg"
-            label="Peso em kg"
-            required
-            value={product?.pesoPecaKg}
-            onChange={handleInputChange}
-          />
-          <TextField
-            type="number"
-            name="quantidadePeca"
-            label="Quantidade"
-            required
-            value={product?.quantidadePeca}
-            onChange={handleInputChange}
-          />
-          <TextField
-            type="number"
-            name="precoKg"
-            label="Preço por kilo"
-            required
-            value={product?.precoKg}
-            onChange={handleInputChange}
-          />
           <TextField
             label="Data de validade"
             type="date"
             name="dataValidade"
             required
-            value={product?.dataValidade}
+            value={product?.dataValidade ?? "-"}
             onChange={handleInputChange}
           />
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -282,9 +292,13 @@ const ProductForms = () => {
               Adicionar
             </Button>
           </Box>
-        </ProductFormContainer>
-      </Box>
-    </>
+        </Box>
+
+
+
+
+      </ProductFormContainer>
+    </Box>
   );
 };
 
