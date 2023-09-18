@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
@@ -16,33 +16,13 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchBar from "../../DesignComponents/SearchBar/SearchBar";
 import { useNavigate } from "react-router-dom";
+import { getProducts } from "../../../services/ProductServices";
+import { IProduct } from "../../../interface/IProduct";
 
-function createData(
-  name: string,
-  pesoPecaKg: number,
-  quantidadePeca: number,
-  precoKg: number,
-) {
-  return {
-    name,
-    pesoPecaKg,
-    quantidadePeca,
-    precoKg,
-    history: [
-      {
-        dataValidade: "2020-01-05",
-        tipoCarne: "CARNE BOVINA",
-        tipoCorteCarne: "Picanha",
-        descricao: " Descricao do produto",
-      },
-    ],
-  };
-}
-
-function Row(props: { row: ReturnType<typeof createData> }) {
-  const { row } = props;
+//Row = Linha 
+function Row(props: { produto: IProduct }) {
+  const { produto: row } = props;
   const [open, setOpen] = useState(false);
-  const [num, setNum] = useState(0);
 
   return (
     <React.Fragment>
@@ -57,7 +37,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.name}
+          {row.nome}
         </TableCell>
         <TableCell align="center">{row.pesoPecaKg} kg</TableCell>
         <TableCell align="center">{row.quantidadePeca}</TableCell>
@@ -75,7 +55,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 }}
               >
                 <Typography variant="h6" gutterBottom component="div">
-                  History
+                  Histórico
                 </Typography>
 
                 <IconButton aria-label="delete" size="medium">
@@ -94,21 +74,19 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.dataValidade}>
+                    <TableRow key={row.dataValidade}>
                       <TableCell component="th" scope="row">
-                        {historyRow.dataValidade}
+                        {row.dataValidade}
                       </TableCell>
-                      <TableCell> {historyRow.tipoCarne} </TableCell>
-                      <TableCell> {historyRow.tipoCorteCarne} </TableCell>
+                      <TableCell> {row.tipoCorteCarne?.descricao} </TableCell>
+                      <TableCell> {row.tipoCorteCarne?.descricaoEspecifica} </TableCell>
                       <TableCell align="center" sx={{ width: "40%" }}>
-                        {historyRow.descricao}
+                        {row.descricao}
                       </TableCell>
                       <TableCell align="right">
-                        {Math.round(row.quantidadePeca * row.pesoPecaKg * 100) / 100}
+                        {Math.round(row?.quantidadePeca * row?.pesoPecaKg * 100) / 100}
                       </TableCell>
                     </TableRow>
-                  ))}
                 </TableBody>
               </Table>
             </Box>
@@ -119,19 +97,22 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   );
 }
 
-const rows = [
-  createData("Picanha", 10, 6, 80),
-  createData("Picanha", 10, 6, 80),
-  createData("Picanha", 10, 6, 80),
-  createData("Picanha", 10, 6, 80),
-];
-
 export default function ProductPage() {
   const navigate = useNavigate();
+  //Array que vem da API é inserido aqui
+  const [produtos, setProdutos] = useState<IProduct[]>([])
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await getProducts();
+      setProdutos(response)
+    }
+    getData();
+  }, [])
 
   return (
-    <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "column" }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+    <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "column", backgroundColor: "#7A96C2" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between",backgroundColor: "#2E4258" }}>
         <SearchBar />
 
         <IconButton aria-label="delete" size="large">
@@ -140,7 +121,7 @@ export default function ProductPage() {
       </Box>
 
       <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
+        <Table aria-label="collapsible table" >
           <TableHead>
             <TableRow>
               <TableCell />
@@ -151,8 +132,9 @@ export default function ProductPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <Row key={row.name} row={row} />
+            {/* O map esta fazendo um loop em cada elemento do array que veio da API */}
+            {produtos.map((produto) => (
+              <Row key={produto.nome} produto={produto} />
             ))}
           </TableBody>
         </Table>
