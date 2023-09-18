@@ -2,7 +2,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Button, IconButton, TextField } from "@mui/material";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IUser } from "../../../interface/IUser";
 import {
   postUsers,
@@ -55,6 +55,7 @@ const UserForms = () => {
       const response = await postUsers(user);
       setUser(clearForm)
       setClear(true);
+      navigate('/login')
       return response;
     } catch (error){
     }
@@ -161,8 +162,8 @@ const UserForms = () => {
             
             <br />
             <br />
-            <Button variant="contained" type="submit" startIcon={<AddIcon />}>
-              Adicionar
+            <Button variant="contained" type="submit">
+              Cadastrar
             </Button>
           </Box>
         </UserFormContainer>
