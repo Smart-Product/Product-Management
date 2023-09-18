@@ -5,6 +5,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -16,7 +18,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
-import React from "react";
+import * as React from "react";
 
 import StoreIcon from "@mui/icons-material/Store";
 import { Avatar, Menu, MenuItem } from "@mui/material";
@@ -76,9 +78,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-export const PageLayout: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export default function PersistentDrawerLeft() {
+
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -103,11 +104,13 @@ export const PageLayout: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const handleNavigate = (path: string) => {
-    return navigate(path);
-  };
+    return navigate(path)
+  }
+
 
   return (
-    <Box sx={{ display: "flex", mt: 5 }}>
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
       <AppBar
         position="fixed"
         open={open}
@@ -117,16 +120,17 @@ export const PageLayout: React.FC<{ children: React.ReactNode }> = ({
           justifyContent: "space-between",
         }}
       >
-        <Box sx={{ display: "flex", width: "50%"}}>
+        <Box sx={{ display: "flex", width: "50%" }}>
           <Toolbar
             sx={{
               display: "flex",
               justifyContent: "space-around",
               width: "20%",
+
             }}
           >
             <IconButton
-              color= "#9EBAE1"
+              color="inherit"
               aria-label="open drawer"
               onClick={handleDrawerOpen}
               edge="start"
@@ -182,15 +186,12 @@ export const PageLayout: React.FC<{ children: React.ReactNode }> = ({
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            <MenuItem onClick={handleCloseUserMenu}>
-              <Typography onClick={() => handleNavigate("/login")}>
-                Logout
-              </Typography>
-            </MenuItem>
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography onClick={() => handleNavigate("/login")}>Logout</Typography>
+              </MenuItem>
           </Menu>
         </Box>
       </AppBar>
-
       <Drawer
         sx={{
           width: drawerWidth,
@@ -215,43 +216,16 @@ export const PageLayout: React.FC<{ children: React.ReactNode }> = ({
         </DrawerHeader>
         <Divider />
         <List>
-
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <MailIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary={"Produtos"}
-                onClick={() => handleNavigate("/")}
-              />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary={"Vendas"}
-                onClick={() => handleNavigate("/sales")}
-              />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <MailIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary={"Datas"}
-                onClick={() => handleNavigate("/data")}
-              />
-            </ListItemButton>
-          </ListItem>
-          
+          {["Vendas", "Estoque", "Option 1", "Option 2"].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
         </List>
         <Divider />
         <List>
@@ -267,8 +241,9 @@ export const PageLayout: React.FC<{ children: React.ReactNode }> = ({
           ))}
         </List>
       </Drawer>
-
-      <Main open={open}>{children}</Main>
+      <Main open={open}>
+        <DrawerHeader />
+      </Main>
     </Box>
   );
-};
+}
