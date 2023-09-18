@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import Password from "../FormComponents/UserForms/Password";
 import Email from "../FormComponents/UserForms/Email";
 import { Link, useNavigate } from "react-router-dom";
-import { IUser } from "../../interface/IUser";
+import { IUserLogin } from "../../interface/IUserLogin";
 
 const steps = ["E-mail", "Senha"];
 
@@ -18,7 +18,7 @@ export default function Login() {
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean;
   }>({});
-  const [userLogin, setUserLogin] = React.useState<IUser>({});
+  const [userLogin, setUserLogin] = React.useState<IUserLogin>({});
 
   const totalSteps = () => {
     return steps.length;
