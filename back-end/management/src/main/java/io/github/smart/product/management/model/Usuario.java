@@ -15,6 +15,8 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.github.smart.product.management.dto.UsuarioDto;
 
 import lombok.AllArgsConstructor;
@@ -33,25 +35,22 @@ public class Usuario {
     @Column(name = "id_usuario")
     private Integer usuarioId;
 
-    @NotEmpty(message = "{campo.nome.obrigatorio}")
     @Column(name = "nome")
     private String nome;
 
-    @NotEmpty(message = "{campo.cpf.obrigatorio}")
     @Column(name = "cpf")
     @CPF(message = "{campo.cpf.invalido}")
     private String cpf;
 
-    @NotEmpty(message = "{campo.email.obrigatorio}")
     @Column(name = "email")
     @Email(message = "{campo.email.invalido}")
     private String email;
 
-    @NotEmpty(message = "{campo.senha.obrigatorio}")
     @Column(name = "senha")
     private String senha;
 
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Produto> produtos;
 
     public String setCPF(String cpf) {

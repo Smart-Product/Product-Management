@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import io.github.smart.product.management.exception.SenhaInvalidaException;
+import io.github.smart.product.management.exception.SenhaIncorretaException;
 import io.github.smart.product.management.model.Usuario;
 import io.github.smart.product.management.repository.UsuarioRepository;
 
@@ -34,7 +34,7 @@ public class UsuarioServiceImpl implements UserDetailsService {
 		if (senhaBatem) {
 			return user;
 		}
-		throw new SenhaInvalidaException();
+		throw new SenhaIncorretaException();
 	}
 
 	@Override

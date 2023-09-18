@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import io.github.smart.product.management.exception.ExpiredTokenException;
 import io.github.smart.product.management.exception.InvalidTokenException;
 import io.github.smart.product.management.exception.ResourceNotAllowedException;
-import io.github.smart.product.management.exception.SenhaInvalidaException;
+import io.github.smart.product.management.exception.SenhaIncorretaException;
 import io.github.smart.product.management.exception.UserCPFFoundException;
 
 @RestControllerAdvice
@@ -54,9 +54,9 @@ public class ApplicationControllerAdvance {
 		return new ApiErrors(messageError);
 	}
 
-	@ExceptionHandler(SenhaInvalidaException.class)
+	@ExceptionHandler(SenhaIncorretaException.class)
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
-	public ApiErrors handlerRuntimeException(SenhaInvalidaException ex) {
+	public ApiErrors handlerRuntimeException(SenhaIncorretaException ex) {
 		String messageError = ex.getMessage();
 		return new ApiErrors(messageError);
 	}

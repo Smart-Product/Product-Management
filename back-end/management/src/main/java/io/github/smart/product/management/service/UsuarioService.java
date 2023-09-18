@@ -8,7 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.github.smart.product.management.dto.CredentialsDto;
 import io.github.smart.product.management.dto.TokenDto;
-import io.github.smart.product.management.exception.SenhaInvalidaException;
+import io.github.smart.product.management.dto.UsuarioDto;
+import io.github.smart.product.management.exception.SenhaIncorretaException;
 import io.github.smart.product.management.exception.UserCPFFoundException;
 import io.github.smart.product.management.model.Usuario;
 import io.github.smart.product.management.repository.UsuarioRepository;
@@ -39,7 +40,7 @@ public class UsuarioService {
             }
             boolean senhaMatch = encoder.matches(credentialsDto.getSenha(), usuario.getSenha());
             if (!senhaMatch) {
-                throw new SenhaInvalidaException();
+                throw new SenhaIncorretaException();
             }
 
             JwtClaims jwtClaims = new JwtClaims();
@@ -50,23 +51,36 @@ public class UsuarioService {
             String token = jwtService.generateToken(jwtClaims);
 
             return new TokenDto(jwtClaims.getNome(), token);
-        } catch (UsernameNotFoundException | SenhaInvalidaException e) {
+        } catch (UsernameNotFoundException | SenhaIncorretaException e) {
             throw e;
         }
     }
 
     @Transactional
-    public Usuario salvar(Usuario usuario) throws UserCPFFoundException {
+    public Usuario salvar(UsuarioDto usuarioDto) {
         try {
-            if (usuarioRepository.findByCpf(usuario.getCpf()).isPresent()) {
+            if (usuarioRepository.findByCpf(usuarioDto.getCpf()).isPresent()) {
                 throw new UserCPFFoundException();
             }
-            String senhaCriptografada = encoder.encode(usuario.getSenha());
+            if (!usuarioDto.getConfirmarSenha().equals(usuarioDto.getSenha())) {
+                throw new SenhaIncorretaException();
+            }
+            String senhaCriptografada = encoder.encode(usuarioDto.getSenha());
+            Usuario usuario = convertDto(usuarioDto);
             usuario.setSenha(senhaCriptografada);
+
             return usuarioRepository.save(usuario);
-        } catch (UserCPFFoundException e) {
+        } catch (UserCPFFoundException | SenhaIncorretaException e) {
             throw e;
         }
+    }
+
+    private Usuario convertDto(UsuarioDto usuarioDto) {
+        Usuario usuario = new Usuario();
+        usuario.setCPF(usuarioDto.getCpf());
+        usuario.setNome(usuarioDto.getNome());
+        usuario.setEmail(usuarioDto.getEmail());
+        return usuario;
     }
 
 }
