@@ -10,6 +10,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.br.CPF;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.github.smart.product.management.dto.UsuarioDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,14 +39,21 @@ public class Usuario {
     private String nome;
 
     @Column(name = "cpf")
+    @CPF(message = "{campo.cpf.invalido}")
     private String cpf;
 
     @Column(name = "email")
+    @Email(message = "{campo.email.invalido}")
     private String email;
 
     @Column(name = "senha")
     private String senha;
 
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Produto> produtos;
+
+    public String setCPF(String cpf) {
+        return this.cpf = cpf.replaceAll("\\D", "");
+    }
 }

@@ -8,15 +8,21 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
 
+import io.github.smart.product.management.context.AppProviders;
 import io.github.smart.product.management.exception.ProductNotFoundException;
 import io.github.smart.product.management.model.Produto;
 import io.github.smart.product.management.repository.ProdutoRepository;
+import io.github.smart.product.management.repository.UsuarioRepository;
+import io.github.smart.product.management.security.jwt.JwtClaims;
 
 @Service
 public class ProdutoService {
 
 	@Autowired
 	private ProdutoRepository produtoRepository;
+
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 
 	public List<Produto> buscarTodos(Produto filter) {
 		ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase().withStringMatcher(StringMatcher.CONTAINING);
@@ -38,6 +44,8 @@ public class ProdutoService {
 	}
 
 	public Produto salvar(Produto produto) {
+		JwtClaims claims = AppProviders.JWT_CLAIMS.get();
+		produto.setUsuario(usuarioRepository.findById(claims.getUsuarioId()).get());
 		return produtoRepository.save(produto);
 	}
 

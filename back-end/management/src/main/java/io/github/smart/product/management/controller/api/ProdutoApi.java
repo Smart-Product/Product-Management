@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.smart.product.management.annotations.TokenRequired;
 import io.github.smart.product.management.model.Produto;
+import io.github.smart.product.management.repository.ProdutoRepository;
 import io.github.smart.product.management.service.ProdutoService;
 
 @RestController
@@ -27,25 +29,28 @@ public class ProdutoApi {
     @Autowired
     private ProdutoService service;
 
+    @Autowired
+    private ProdutoRepository repository;
+
+    @TokenRequired
     @PostMapping
-    public ResponseEntity<Produto> cadastrar(@RequestBody @Valid Produto produto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(produto));
+    public Produto cadastrar(@RequestBody @Valid Produto produto) {
+        return service.salvar(produto);
     }
 
     @GetMapping
-    public ResponseEntity<List<Produto>> buscarTodos(Produto filter) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(service.buscarTodos(filter));
+    public List<Produto> buscarTodos() {
+        return repository.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> obterDadosPorId(@PathVariable Integer id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(service.obterDadosPorId(id));
+    public Produto obterDadosPorId(@PathVariable Integer id) {
+        return service.obterDadosPorId(id);
     }
 
     @PutMapping
-    public ResponseEntity editar(@Valid @RequestBody Produto produto) {
+    public void editar(@Valid @RequestBody Produto produto) {
         service.editar(produto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
 }
