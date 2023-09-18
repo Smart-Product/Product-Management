@@ -126,6 +126,7 @@ export default function PersistentDrawerLeft() {
               display: "flex",
               justifyContent: "space-around",
               width: "20%",
+
             }}
           >
             <IconButton
