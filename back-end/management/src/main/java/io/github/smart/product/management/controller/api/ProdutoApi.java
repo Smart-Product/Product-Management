@@ -29,18 +29,14 @@ public class ProdutoApi {
     @Autowired
     private ProdutoService service;
 
-    @Autowired
-    private ProdutoRepository repository;
-
-    @TokenRequired
     @PostMapping
     public Produto cadastrar(@RequestBody @Valid Produto produto) {
         return service.salvar(produto);
     }
 
     @GetMapping
-    public List<Produto> buscarTodos() {
-        return repository.findAll();
+    public List<Produto> buscarTodos(Produto filter) {
+        return service.buscarTodos(filter);
     }
 
     @GetMapping("/{id}")
