@@ -101,6 +101,12 @@ export default function ProductPage() {
   const navigate = useNavigate();
   //Array que vem da API é inserido aqui
   const [produtos, setProdutos] = useState<IProduct[]>([])
+  const [produtosFiltrados, setProdutosFiltrado] = useState<IProduct[]>([])
+
+  function search(response: IProduct[]) {
+    setProdutosFiltrado(response);
+    console.log(produtosFiltrados);
+  }
 
   useEffect(() => {
     const getData = async () => {
@@ -108,12 +114,16 @@ export default function ProductPage() {
       setProdutos(response)
     }
     getData();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    setProdutos(produtosFiltrados);
+  }, [produtosFiltrados]);
 
   return (
     <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "column", backgroundColor: "#7A96C2" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between",backgroundColor: "#2E4258" }}>
-        <SearchBar />
+        <SearchBar search = {search} />
 
         <IconButton aria-label="delete" size="large">
           <AddIcon onClick={() => navigate("/adicionar_produto")} />
@@ -133,9 +143,9 @@ export default function ProductPage() {
           </TableHead>
           <TableBody>
             {/* O map esta fazendo um loop em cada elemento do array que veio da API */}
-            {produtos.map((produto) => (
-              <Row key={produto.nome} produto={produto} />
-            ))}
+          {produtos.map((produto) => (
+                <Row key={produto.nome} produto={produto} />
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
