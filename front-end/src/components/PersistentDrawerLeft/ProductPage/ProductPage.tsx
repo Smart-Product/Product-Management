@@ -111,8 +111,8 @@ export default function ProductPage() {
   }, [])
 
   return (
-    <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "column", backgroundColor: "#7A96C2" }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between",backgroundColor: "#2E4258" }}>
+    <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "column" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <SearchBar />
 
         <IconButton aria-label="delete" size="large">
@@ -121,7 +121,7 @@ export default function ProductPage() {
       </Box>
 
       <TableContainer component={Paper}>
-        <Table aria-label="collapsible table" >
+        <Table aria-label="collapsible table">
           <TableHead>
             <TableRow>
               <TableCell />
