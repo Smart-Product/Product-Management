@@ -78,6 +78,62 @@ function MultiSelect({ typesList, label, handleMeat, handleSlice, clear }: Selec
 }
 
 
+interface NumericInputProps {
+  name: string;
+  label: string;
+  value: number | undefined;
+  handleInput: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+}
+
+function NumericInput({ name, label, value, handleInput }: NumericInputProps) {
+
+  const [isNegative, setIsNegative] = useState(false);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { value } = e.target;
+    if (e.target.type === "number") {
+      let numericValue: number = parseFloat(value);
+      if (numericValue < 0) {
+        setIsNegative(true)
+        return handleInput(e)
+      } else {
+        setIsNegative(false)
+        return handleInput(e)
+      }
+    } else {
+      handleInput(e)
+    }
+
+
+  };
+
+  return (<>
+    {isNegative ? (
+      <TextField
+        type="number"
+        error
+        name={name}
+        required
+        helperText="Insira um valor positivo."
+        value={value}
+        onChange={handleInputChange}
+      />
+    ) : (
+      <TextField
+        type="number"
+        name={name}
+        label={label}
+        required
+        value={value}
+        onChange={handleInputChange}
+      />
+    )}
+  </>)
+}
+
+
 const ProductForms = () => {
   const [product, setProduct] = useState<IProduct>();
   const [listMeatTypes, setListMeatTypes] = useState<IMeatTypes[]>([]);
@@ -86,19 +142,31 @@ const ProductForms = () => {
   );
   const navigate = useNavigate();
   const [clear, setClear] = useState(false)
+  const [isNegativeNumber, setisNegativeNumber] = useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    let numericValue: string | number = value;
 
     if (e.target.type === "number") {
-      numericValue = parseInt(value);
+      let numericValue: number = parseFloat(value);
+      if (numericValue < 0) {
+        setisNegativeNumber(true)
+        return setProduct({ ...product, [name]: undefined })
+      } else {
+        setisNegativeNumber(false)
+        return setProduct({ ...product, [name]: numericValue });
+      }
+    } else {
+      let textValue: string = value;
+
+      return setProduct({ ...product, [name]: textValue });
     }
 
-    setProduct({ ...product, [name]: numericValue });
+
   };
+
 
   console.log(product)
 
@@ -131,11 +199,61 @@ const ProductForms = () => {
   };
 
   const createProduct = async (product: IProduct) => {
+    let date: string = product.dataValidade ?? ""
+    let dateString = new Date(Date.parse(date))
+
     try {
-      const response = await postProducts(product);
-      return response;
+      if (dateString < new Date()) {
+        formError("O produto está vencido!");
+        return;
+      }
+      else if (
+        product.nome &&
+        product.descricao &&
+        product.precoKg &&
+        product.pesoPecaKg &&
+        product.quantidadePeca &&
+        product.tipoCorteCarne
+      ) {
+        const response = await postProducts(product);
+        ProductCreateSuccess();
+        const clearForm: IProduct = {
+          produtoId: 0,
+          nome: "",
+          descricao: "",
+          pesoPecaKg: 0,
+          quantidadePeca: 0,
+          precoKg: 0,
+          dataValidade: "",
+          tipoCorteCarne: { caracteristicaId: 0 }
+        };
+
+        setProduct(clearForm)
+        return response;
+      } else {
+        console.log("caiu no erro")
+        if (typeof (product.nome) !== "string") {
+          return formError("Insira um nome");
+        }
+        if (typeof (product.descricao) !== "string") {
+          formError("Insira uma descrição");
+        }
+        if (typeof (product.precoKg) !== "number") {
+          formError("O preço deve ser positivo");
+        }
+        if (typeof (product.pesoPecaKg) !== "number") {
+          formError("O peso deve ser positivo");
+        }
+        if (typeof (product.quantidadePeca) !== "number") {
+          formError("A quantidade deve ser positiva");
+        }
+        if (typeof (product.tipoCorteCarne?.caracteristicaId) !== "number") {
+          formError("Escolha um tipo de corte");
+        }
+      }
+
     } catch {
-      console.log("error");
+      console.error("erro");
     }
   };
 
@@ -152,25 +270,12 @@ const ProductForms = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const clearForm: IProduct = {
-      produtoId: 0,
-      nome: "",
-      descricao: "",
-      pesoPecaKg: 0,
-      quantidadePeca: 0,
-      precoKg: 0,
-      dataValidade: "",
-      tipoCorteCarne: { caracteristicaId: 0 }
-    };
-
     if (product?.tipoCorteCarne?.caracteristicaId == 0) {
       formError("Insira o tipo de carne")
       return
     } else {
       createProduct(product!)
-      setProduct(clearForm)
       setClear(true)
-      ProductCreateSuccess();
     }
   };
 
@@ -236,30 +341,12 @@ const ProductForms = () => {
             <TextField label="Escolha um tipo de Carne" disabled />
           )}
 
-          <TextField
-            type="number"
-            name="pesoPecaKg"
-            label="Peso em kg"
-            required
-            value={product?.pesoPecaKg}
-            onChange={handleInputChange}
-          />
-          <TextField
-            type="number"
-            name="quantidadePeca"
-            label="Quantidade"
-            required
-            value={product?.quantidadePeca}
-            onChange={handleInputChange}
-          />
-          <TextField
-            type="number"
-            name="precoKg"
-            label="Preço por kilo"
-            required
-            value={product?.precoKg}
-            onChange={handleInputChange}
-          />
+          <NumericInput name={"pesoPecaKg"} label={"Peso em kg"} value={product?.pesoPecaKg} handleInput={handleInputChange} />
+
+          <NumericInput name={"quantidadePeca"} label={"Quantidade"} value={product?.quantidadePeca} handleInput={handleInputChange} />
+
+          <NumericInput name={"precoKg"} label={"Preço por kilo"} value={product?.precoKg} handleInput={handleInputChange} />
+
           <TextField
             label="Data de validade"
             type="date"
@@ -268,6 +355,7 @@ const ProductForms = () => {
             value={product?.dataValidade}
             onChange={handleInputChange}
           />
+
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <textarea
               name="descricao"

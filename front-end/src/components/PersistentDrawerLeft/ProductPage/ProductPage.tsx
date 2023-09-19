@@ -124,14 +124,14 @@ export default function ProductPage() {
     <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "column", backgroundColor: "#7A96C2" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between",backgroundColor: "#2E4258" }}>
         <SearchBar search = {search} />
-
+        
         <IconButton aria-label="delete" size="large">
           <AddIcon onClick={() => navigate("/adicionar_produto")} />
         </IconButton>
       </Box>
 
       <TableContainer component={Paper}>
-        <Table aria-label="collapsible table" >
+        <Table aria-label="collapsible table">
           <TableHead>
             <TableRow>
               <TableCell />

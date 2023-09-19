@@ -107,7 +107,7 @@ export const PageLayout: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <Box sx={{ display: "flex", mt: 5 }}>
+    <Box sx={{ display: "flex", mt: 4 }}>
       <AppBar
         position="fixed"
         open={open}
@@ -122,11 +122,12 @@ export const PageLayout: React.FC<{ children: React.ReactNode }> = ({
             sx={{
               display: "flex",
               justifyContent: "space-around",
-              width: "20%",
+              width: "20%"
+
             }}
           >
             <IconButton
-              color= "#9EBAE1"
+              color="inherit"
               aria-label="open drawer"
               onClick={handleDrawerOpen}
               edge="start"

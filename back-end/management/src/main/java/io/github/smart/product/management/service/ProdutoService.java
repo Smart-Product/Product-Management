@@ -1,12 +1,15 @@
 package io.github.smart.product.management.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.ExampleMatcher.StringMatcher;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import io.github.smart.product.management.context.AppProviders;
 import io.github.smart.product.management.exception.ProductNotFoundException;
@@ -44,8 +47,8 @@ public class ProdutoService {
 	}
 
 	public Produto salvar(Produto produto) {
-		JwtClaims claims = AppProviders.JWT_CLAIMS.get();
-		produto.setUsuario(usuarioRepository.findById(claims.getUsuarioId()).get());
+		// JwtClaims claims = AppProviders.JWT_CLAIMS.get();
+		// produto.setUsuario(usuarioRepository.findById(claims.getUsuarioId()).get());
 		return produtoRepository.save(produto);
 	}
 
