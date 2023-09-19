@@ -47,8 +47,8 @@ public class ProdutoService {
 	}
 
 	public Produto salvar(Produto produto) {
-		JwtClaims claims = AppProviders.JWT_CLAIMS.get();
-		produto.setUsuario(usuarioRepository.findById(claims.getUsuarioId()).get());
+		// JwtClaims claims = AppProviders.JWT_CLAIMS.get();
+		// produto.setUsuario(usuarioRepository.findById(claims.getUsuarioId()).get());
 		return produtoRepository.save(produto);
 	}
 

@@ -107,14 +107,15 @@ export default function ProductPage() {
       const response = await getProducts();
       setProdutos(response)
     }
-    getData();
+    getData();  
   }, [])
 
   return (
-    <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "column", backgroundColor: "#7A96C2" }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between",backgroundColor: "#2E4258" }}>
-        <SearchBar />
+    <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "column"}}>
+      <Box sx={{ display: "flex", justifyContent: "space-between"}}>
 
+        <SearchBar />
+        
         <IconButton aria-label="delete" size="large">
           <AddIcon onClick={() => navigate("/adicionar_produto")} />
         </IconButton>
