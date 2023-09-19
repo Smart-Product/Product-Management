@@ -127,7 +127,7 @@ export const PageLayout: React.FC<{ children: React.ReactNode }> = ({
             }}
           >
             <IconButton
-              color= "#9EBAE1"
+              color="inherit"
               aria-label="open drawer"
               onClick={handleDrawerOpen}
               edge="start"

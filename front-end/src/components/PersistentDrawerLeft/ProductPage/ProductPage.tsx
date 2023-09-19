@@ -107,7 +107,7 @@ export default function ProductPage() {
       const response = await getProducts();
       setProdutos(response)
     }
-    getData();
+    getData();  
   }, [])
 
   return (
@@ -115,6 +115,7 @@ export default function ProductPage() {
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <SearchBar />
 
+        
         <IconButton aria-label="delete" size="large">
           <AddIcon onClick={() => navigate("/adicionar_produto")} />
         </IconButton>
