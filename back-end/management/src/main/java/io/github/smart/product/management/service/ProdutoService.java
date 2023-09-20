@@ -51,5 +51,13 @@ public class ProdutoService {
 		// produto.setUsuario(usuarioRepository.findById(claims.getUsuarioId()).get());
 		return produtoRepository.save(produto);
 	}
+	
+	public void deletar(Integer produtoId){
+		Optional<Produto> produto = produtoRepository.findById(produtoId);
 
+        if(produto.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        produtoRepository.deleteById(produtoId);
+	}
 }

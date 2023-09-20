@@ -4,18 +4,18 @@ import React, { useState } from "react";
 import { IProduct } from '../../../interface/IProduct';
 import { getProductsFilter } from '../../../services/ProductServices';
 
-interface searchProps{
+interface searchProps {
   search: (value: IProduct[]) => void
 }
-const SearchBar = ({search}: searchProps) => {
+const SearchBar = ({ search }: searchProps) => {
   const [produto, setProduct] = useState<IProduct>();
-  
-  const  handleNomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleNomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProduct({ ...produto, [name]: value });
   };
 
-  const handleSearch = async() => {
+  const handleSearch = async () => {
     try {
       const response = await getProductsFilter(produto)
       return search(response);
@@ -25,15 +25,15 @@ const SearchBar = ({search}: searchProps) => {
   }
 
   return (<>
-      <Input 
-        placeholder='Pesquise aqui ...'
-        type='text'
-        name='nome'
-        value={produto?.nome}
-        onChange={handleNomeChange}
-      />
-      <Button onClick={handleSearch}>Pesquisar</Button>
-    </>
+    <Input
+      placeholder='Pesquise aqui ...'
+      type='text'
+      name='nome'
+      value={produto?.nome}
+      onChange={handleNomeChange}
+    />
+    <Button onClick={handleSearch}>Pesquisar</Button>
+  </>
   )
 }
 
