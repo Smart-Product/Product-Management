@@ -21,17 +21,23 @@ import { IProduct } from "../../../interface/IProduct";
 
 //Row = Linha 
 const Row: React.FC<{ produto: IProduct }> = ({ produto }) => {
-  let open = false
-  const handleOpen = () => {
-    open ? false : true
-  }
+  const [open, setOpen] = useState(false);
+
+  // Function to toggle the 'open' state
+  const toggleOpen = () => {
+    setOpen(!open);
+  };
+
+  useEffect(() => {
+    setOpen(false);
+  }, [produto]);
   return (<>
     <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
       <TableCell>
         <IconButton
           aria-label="expand row"
           size="small"
-          onClick={() => handleOpen()}
+          onClick={toggleOpen}
         >
           {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
         </IconButton>
