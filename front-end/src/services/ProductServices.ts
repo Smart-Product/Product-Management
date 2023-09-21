@@ -14,6 +14,24 @@ export async function getProducts(): Promise<IProduct[]> {
   }
 }
 
+export async function getProductsFilter(product: IProduct | undefined): Promise<IProduct[]> {
+  try {
+    const params = {
+      dataValidade: product?.dataValidade,
+      descricao: product?.descricao,
+      nome: product?.nome,
+      pesoPecaKg: product?.pesoPecaKg,
+      precoKg: product?.precoKg,
+      quantidadePeca: product?.quantidadePeca
+    };
+    const response = await axios.get(`${urlApi}/produtos`, { params });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function postProducts(product: IProduct) {
   if(product.tipoCorteCarne?.caracteristicaId !== 0){
     
