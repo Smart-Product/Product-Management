@@ -1,4 +1,4 @@
-export interface IMeatTypes{
-    key: number;
-    value: string;
+export interface IMeatTypes {
+    key: number | undefined;
+    value: string | undefined;
 }

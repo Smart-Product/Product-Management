@@ -32,9 +32,42 @@ export async function getProductsFilter(product: IProduct | undefined): Promise<
   }
 }
 
+export async function getProductsId(id: number): Promise<IProduct> {
+
+  try {
+    const request = await axios.get(`${urlApi}/produtos/${id}`)
+    const response: IProduct = request.data
+    return response
+  } catch (error) {
+    console.error(error)
+    throw error;
+  }
+
+}
+
+export async function PutProduct(updateData: IProduct): Promise<void> {
+  try {
+    await axios.put(`${urlApi}/produtos`, {
+      produtoId: updateData.produtoId,
+      dataValidade: updateData.dataValidade,
+      descricao: updateData.descricao,
+      nome: updateData.nome,
+      pesoPecaKg: updateData.pesoPecaKg,
+      precoKg: updateData.precoKg,
+      quantidadePeca: updateData.quantidadePeca,
+      tipoCorteCarne: updateData.tipoCorteCarne
+    });
+    console.log("product updated!")
+  } catch (error) {
+    console.error(error);
+    console.log(updateData)
+    throw error;
+  }
+}
+
 export async function postProducts(product: IProduct) {
-  if(product.tipoCorteCarne?.caracteristicaId !== 0){
-    
+  if (product.tipoCorteCarne?.caracteristicaId !== 0) {
+
   }
   try {
     await axios.post(`${urlApi}/produtos`, {
@@ -53,7 +86,7 @@ export async function postProducts(product: IProduct) {
   }
 }
 
-export async function getMeatTypes(): Promise<IMeatTypes[]>{
+export async function getMeatTypes(): Promise<IMeatTypes[]> {
   try {
     const response = await axios.get(`${urlApi}/caracteristica`)
     return response.data
@@ -63,13 +96,24 @@ export async function getMeatTypes(): Promise<IMeatTypes[]>{
   }
 }
 
-export async function getSliceTypes(meatType: string | null){
+export async function getSliceTypes(meatType: string | null) {
   try {
     const response = await axios.get(`${urlApi}/caracteristica/descricao/${meatType}`);
-    return response.data; 
+    return response.data;
 
   } catch (error) {
     console.error(error);
     throw error;
+  }
+}
+
+export async function deleteProductById(id: number) {
+  try {
+    await axios.delete(`${urlApi}/produtos/${id};`)
+    return console.log(
+      "Product deleted: "
+      , id)
+  } catch (error) {
+    console.error(error)
   }
 }

@@ -7,12 +7,16 @@ import { IMeatTypes } from "../../../interface/IMeatTypes";
 import { IProduct } from "../../../interface/IProduct";
 import { ISliceTypes } from "../../../interface/ISliceTypes";
 import {
+  PutProduct,
   getMeatTypes,
+  getProductsId,
   getSliceTypes,
   postProducts,
 } from "../../../services/ProductServices";
 import { ProductFormContainer } from "./ProductForms.styles";
-import { ProductCreateSuccess, formError } from "../../../utils/utils";
+import { ProductCreateSuccess, ProductEditedSuccess, formError } from "../../../utils/utils";
+import { PageLayout } from "../../PersistentDrawerLeft/PageLayout";
+import { useParams } from 'react-router-dom';
 
 
 interface SelectProps {
@@ -21,9 +25,11 @@ interface SelectProps {
   handleMeat?: (value: string | null) => void;
   handleSlice?: (value: number) => void;
   clear?: boolean;
+  descricao: string | null;
+  caracteristicaId: number | null;
 }
 
-function MultiSelect({ typesList, label, handleMeat, handleSlice, clear }: SelectProps) {
+function MultiSelect({ typesList, label, handleMeat, handleSlice, clear, descricao, caracteristicaId }: SelectProps) {
   const [meatType, setMeatType] = useState<string | null>(null);
   const [sliceType, setSliceType] = useState<string | null>(null);
 
@@ -54,6 +60,14 @@ function MultiSelect({ typesList, label, handleMeat, handleSlice, clear }: Selec
       return;
     }
   }, [clear])
+
+  useEffect(() => {
+    if (descricao) {
+      setMeatType(descricao)
+    } else {
+      setSliceType(caracteristicaId?.toString())
+    }
+  }, [descricao, caracteristicaId])
 
   return (
     <FormControl size="medium">
@@ -126,7 +140,7 @@ function NumericInput({ name, label, value, handleInput }: NumericInputProps) {
         name={name}
         label={label}
         required
-        value={value}
+        value={value || ''}
         onChange={handleInputChange}
       />
     )}
@@ -134,15 +148,51 @@ function NumericInput({ name, label, value, handleInput }: NumericInputProps) {
 }
 
 
-const ProductForms = () => {
+const ProductPage = () => {
+  let { id } = useParams();
+
   const [product, setProduct] = useState<IProduct>();
+
   const [listMeatTypes, setListMeatTypes] = useState<IMeatTypes[]>([]);
+
   const [listSliceTypes, setListSliceTypes] = useState<ISliceTypes[]>(
     []
   );
+  const [titlePageLayout, setTitlePageLayout] = useState("")
+
+  console.log(product)
+
   const navigate = useNavigate();
+
   const [clear, setClear] = useState(false)
+
   const [isNegativeNumber, setisNegativeNumber] = useState(false);
+
+
+
+  useMemo(() => {
+    const fetchTypes = async () => {
+      const dataTypes = await getMeatTypes();
+      console.log(dataTypes)
+      setListMeatTypes(dataTypes)
+    };
+
+    if (id) {
+      const getProductById = async (id: number) => {
+        const request = await getProductsId(id)
+        return setProduct(request);
+      }
+      const data = getProductById(parseInt(id))
+      setProduct(data)
+      setTitlePageLayout("Editar Produto")
+      fetchTypes();
+    } else {
+      fetchTypes();
+      setTitlePageLayout("Adicionar Produto")
+    }
+
+
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -167,15 +217,6 @@ const ProductForms = () => {
 
   };
 
-  useMemo(() => {
-    const fetchTypes = async () => {
-      const dataTypes = await getMeatTypes();
-      console.log(dataTypes)
-      setListMeatTypes(dataTypes)
-    };
-
-    fetchTypes();
-  }, []);
 
   const fetchTypeSlices = async (meatType: string | null) => {
     const dataSlices: ISliceTypes[] = await getSliceTypes(meatType);
@@ -266,10 +307,60 @@ const ProductForms = () => {
     }
   };
 
+  const editProduct = async (product: IProduct) => {
+    let date: string = product.dataValidade ?? ""
+    let dateString = new Date(Date.parse(date))
+
+    try {
+      if (dateString < new Date()) {
+        formError("O produto está vencido!");
+        return;
+      }
+      else if (
+        product.nome &&
+        product.descricao &&
+        product.precoKg &&
+        product.pesoPecaKg &&
+        product.quantidadePeca &&
+        product.tipoCorteCarne
+      ) {
+        const response = await PutProduct(product);
+        ProductEditedSuccess()
+        return response;
+      } else {
+        console.log("caiu no erro")
+        if (typeof (product.nome) !== "string") {
+          return formError("Insira um nome");
+        }
+        if (typeof (product.descricao) !== "string") {
+          formError("Insira uma descrição");
+        }
+        if (typeof (product.precoKg) !== "number") {
+          formError("O preço deve ser positivo");
+        }
+        if (typeof (product.pesoPecaKg) !== "number") {
+          formError("O peso deve ser positivo");
+        }
+        if (typeof (product.quantidadePeca) !== "number") {
+          formError("A quantidade deve ser positiva");
+        }
+        if (typeof (product.tipoCorteCarne?.caracteristicaId) !== "number") {
+          formError("Escolha um tipo de corte");
+        }
+      }
+
+    } catch {
+      console.error("erro");
+    }
+
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (product?.tipoCorteCarne?.caracteristicaId == 0) {
+    if (id) {
+      editProduct(product)
+      return
+    } else if (product?.tipoCorteCarne?.caracteristicaId == 0) {
       formError("Insira o tipo de carne")
       return
     } else {
@@ -278,27 +369,26 @@ const ProductForms = () => {
     }
   };
 
-  return (
-    <>
+  return (<>
+    <PageLayout title={titlePageLayout}>
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "column",
+          minWidth: "80%"
         }}
       >
         <Box
           sx={{
             display: "flex",
-            width: "100vw",
-            justifyContent: "space-between",
+            width: "94vw",
+            justifyContent: "flex-end",
+            mt: 1,
           }}
         >
-          <Box sx={{ textAlign: "center", width: "98%" }}>
-            <h1>Adicione um produto novo !</h1>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
             <IconButton onClick={() => navigate("/")}>
               <CloseIcon />
             </IconButton>
@@ -312,7 +402,7 @@ const ProductForms = () => {
             name="nome"
             required
             placeholder="Nome..."
-            value={product?.nome}
+            value={product?.nome || ''}
             onChange={handleInputChange}
           />
 
@@ -322,6 +412,7 @@ const ProductForms = () => {
               label="Tipos de Carne"
               handleMeat={handleTypeMeat}
               clear={clear}
+              descricao={id ? product?.tipoCorteCarne?.descricao : ""}
             />
           ) : (
             <TextField label="Tipos de Carne" disabled />
@@ -334,13 +425,14 @@ const ProductForms = () => {
               label="Tipos de Corte"
               handleSlice={handleTypeSlice}
               clear={clear}
+              caracteristicaId={id ? product?.tipoCorteCarne?.caracteristicaId : ""}
 
             />
           ) : (
             <TextField label="Escolha um tipo de Carne" disabled />
           )}
 
-          <NumericInput name={"pesoPecaKg"} label={"Peso em kg"} value={product?.pesoPecaKg} handleInput={handleInputChange} />
+          <NumericInput name={"pesoPecaKg"} label={"Peso em kg"} value={product?.pesoPecaKg!} handleInput={handleInputChange} />
 
           <NumericInput name={"quantidadePeca"} label={"Quantidade"} value={product?.quantidadePeca} handleInput={handleInputChange} />
 
@@ -351,28 +443,30 @@ const ProductForms = () => {
             type="date"
             name="dataValidade"
             required
-            value={product?.dataValidade}
+            value={product?.dataValidade || ''}
             onChange={handleInputChange}
           />
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, minWidth: "100%" }}>
             <textarea
               name="descricao"
               id="descricao"
               placeholder="Descrição..."
               onInput={() => autoResize("descricao")}
-              value={product?.descricao}
+              value={product?.descricao || ''}
               onChange={handleInputChange}
             />
 
             <Button variant="contained" type="submit" startIcon={<AddIcon />}>
-              Adicionar
+              {id ? 'Salvar' : 'Adicionar'}
             </Button>
           </Box>
         </ProductFormContainer>
       </Box>
-    </>
+    </PageLayout>
+  </>
+
   );
 };
 
-export default ProductForms;
+export default ProductPage;
