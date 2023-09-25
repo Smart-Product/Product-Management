@@ -76,9 +76,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-export const PageLayout: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const PageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -117,7 +115,7 @@ export const PageLayout: React.FC<{ children: React.ReactNode }> = ({
           justifyContent: "space-between",
         }}
       >
-        <Box sx={{ display: "flex", width: "50%"}}>
+        <Box sx={{ display: "flex", width: "50%" }}>
           <Toolbar
             sx={{
               display: "flex",
@@ -252,7 +250,7 @@ export const PageLayout: React.FC<{ children: React.ReactNode }> = ({
               />
             </ListItemButton>
           </ListItem>
-          
+
         </List>
         <Divider />
         <List>

@@ -169,6 +169,7 @@ const ProductForms = () => {
   useMemo(() => {
     const fetchTypes = async () => {
       const dataTypes = await getMeatTypes();
+      console.log(dataTypes)
       setListMeatTypes(dataTypes)
     };
 
@@ -177,6 +178,7 @@ const ProductForms = () => {
 
   const fetchTypeSlices = async (meatType: string | null) => {
     const dataSlices: ISliceTypes[] = await getSliceTypes(meatType);
+    console.log('cortes: ', dataSlices)
     setListSliceTypes(dataSlices);
 
   };
