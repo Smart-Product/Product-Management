@@ -1,16 +1,22 @@
 import axios from "axios";
 import { IProduct } from "../interface/IProduct";
 import { IMeatTypes } from "../interface/IMeatTypes";
+import { ErrorException } from "../utils/exception";
 
 const urlApi = "http://localhost:8000/api";
+const token = localStorage.getItem("token");
+const config = {
+  headers: {
+    Authorization: `Bearer ${token}`
+  },
+};
 
 export async function getProducts(): Promise<IProduct[]> {
   try {
     const response = await axios.get(`${urlApi}/produtos`);
     return response.data;
   } catch (error) {
-    console.error(error);
-    throw error;
+     throw ErrorException(error);
   }
 }
 
@@ -29,9 +35,7 @@ export async function postProducts(product: IProduct) {
       tipoCorteCarne: product.tipoCorteCarne
     });
   } catch (error) {
-    console.error(error);
-    console.log(product)
-    throw error;
+     throw ErrorException(error);
   }
 }
 
@@ -40,7 +44,6 @@ export async function getMeatTypes(): Promise<IMeatTypes[]>{
     const response = await axios.get(`${urlApi}/caracteristica`)
     return response.data
   } catch (error) {
-    console.error(error)
     throw error
   }
 }
@@ -51,7 +54,6 @@ export async function getSliceTypes(meatType: string | null){
     return response.data; 
 
   } catch (error) {
-    console.error(error);
-    throw error;
+     throw ErrorException(error);
   }
 }

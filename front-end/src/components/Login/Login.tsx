@@ -1,163 +1,102 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepButton from "@mui/material/StepButton";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Password from "../FormComponents/UserForms/Password";
-import Email from "../FormComponents/UserForms/Email";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { IUserLogin } from "../../interface/IUserLogin";
+import { ICredentials } from "../../interface/ICredentials";
+import { Link, useNavigate } from "react-router-dom";
+import { autenticar } from "../../services/UserServices";
+import { Box, TextField, Button } from "@mui/material";
+import { UserFormContainer } from "../FormComponents/UserForms/UserForms.styles";
+import { formatCPF } from "../FormComponents/UserForms/CpfFormat";
 
-const steps = ["E-mail", "Senha"];
 
-export default function Login() {
+const Login = () => {
+  const [credential, setCredential] = useState<ICredentials>();
   const navigate = useNavigate();
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [completed, setCompleted] = React.useState<{
-    [k: number]: boolean;
-  }>({});
-  const [userLogin, setUserLogin] = React.useState<IUserLogin>({});
+  const [clear, setClear] = useState(false);
 
-  const totalSteps = () => {
-    return steps.length;
-  };
 
-  const completedSteps = () => {
-    return Object.keys(completed).length;
-  };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    const regex = /[a-zA-Z]/;
 
-  const isLastStep = () => {
-    return activeStep === totalSteps() - 1;
-  };
+    let formattedCpf: string | number = value;
+    let contemLetra = regex.test(value);
+    
+    if (name == "login" && !contemLetra) {
+      formattedCpf = formatCPF(value);
+    }
+    if (value.length > 40) {
+      return
+    }
+    setCredential({ ...credential, [name]: value })
+    setCredential({ ...credential, [name]: formattedCpf })
+  }
 
-  const allStepsCompleted = () => {
-    return completedSteps() === totalSteps();
-  };
+  const signInUser = async (credential: ICredentials) => {
+    try {
+      const response = await autenticar(credential);
+      setCredential(clearForm);
+      setClear(true);
+      insertLocalStorage(response);
+      navigate("/")
+    } catch (error) {
+    }
+  }
+  
+  const insertLocalStorage =(response: IUserLogin) => {
+    localStorage.setItem("login", response.login);
+    localStorage.setItem("token", response.token);
+  }
 
-  const handleNext = () => {
-    const newActiveStep =
-      isLastStep() && !allStepsCompleted()
-        ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
-        : activeStep + 1;
-    setActiveStep(newActiveStep);
-  };
+  const clearForm: ICredentials = {
+    login: "",
+    senha: ""
+  }
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleStep = (step: number) => () => {
-    setActiveStep(step);
-  };
-
-  const handleComplete = () => {
-    const newCompleted = completed;
-    newCompleted[activeStep] = true;
-    setCompleted(newCompleted);
-    handleNext();
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-    setCompleted({});
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  };
-
-  const handleNavigate = (path: string) => () => {
-    return navigate(path);
+    signInUser(credential!);
   };
 
   return (
-    <Box sx={{ width: "100%", textAlign: "center" }}>
-      <Stepper nonLinear activeStep={activeStep}>
-        {steps.map((label, index) => (
-          <Step key={label} completed={completed[index]}>
-            <StepButton color="inherit" onClick={handleStep(index)}>
-              {label}
-            </StepButton>
-          </Step>
-        ))}
-      </Stepper>
-      <form onSubmit={handleSubmit}>
-        {allStepsCompleted() ? (
-          <Box
-            sx={{
-              height: "86vh",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-              justifyContent: "center",
-            }}
-          >
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Box sx={{ flex: "1 1 auto" }} />
-              <Button onClick={handleNavigate("/")}>Entrar</Button>
+    <>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+        <Box sx={{ display: "flex", width: "100vw", justifyContent: "space-between" }}>
+          <Box sx={{ textAlign: "center", width: "100%" }}><h1>Login</h1></Box>
+        </Box>
+        <UserFormContainer onSubmit={handleSubmit} className="d">
+            <Box sx={{ flexDirection: "column", width: "300px" }}>
+              <br />
+              <TextField
+                label="E-mail ou CPF"
+                type="text"  
+                name="login"
+                required
+                placeholder="Digite email ou CPF..."
+                value={credential?.login}
+                onChange={handleInputChange}
+              />
+              <br />
+              <br />
+              <TextField
+                label="Senha"
+                type="password"  
+                name="senha"
+                required
+                placeholder="Digite email ou CPF..."
+                value={credential?.senha}
+                onChange={handleInputChange}
+              />
+              <br />
+              <br />
+              <Button variant="contained" type="submit">Logar</Button>
+              <br />
+              <p>Precisa de uma conta ? Crie <Link to={"/cadastro"}>Aqui</Link></p>
             </Box>
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              height: "86vh",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
-              {activeStep + 1 == 1 ? <Email /> : <></>}
-              {activeStep + 1 == 2 ? <Password /> : <></>}
-            </Box>
-
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                Back
-              </Button>
-              <Box sx={{ flex: "1 1 auto" }} />
-              <Button onClick={handleNext} sx={{ mr: 1 }}>
-                Next
-              </Button>
-              {activeStep !== steps.length &&
-                (completed[activeStep] ? (
-                  <Typography
-                    variant="caption"
-                    sx={{ display: "inline-block" }}
-                  >
-                    {activeStep + 1 == 1 ? "O E-mail" : "A Senha"} Já for
-                    preenchido
-                  </Typography>
-                ) : (
-                  <Button onClick={handleComplete}>
-                    {completedSteps() === totalSteps() - 1
-                      ? "Finish"
-                      : "Complete Step"}
-                  </Button>
-                ))}
-            </Box>
-          </Box>
-        )}
-      </form>
-      <p>
-        Precisa de uma conta ? Crie <Link to={"/cadastro"}>Aqui</Link>
-      </p>
-    </Box>
+          </UserFormContainer>
+      </Box>
+    </>
   );
-}
+};
+
+
+export default Login;

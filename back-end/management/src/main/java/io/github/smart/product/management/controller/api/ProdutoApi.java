@@ -41,6 +41,7 @@ public class ProdutoApi {
         return service.salvar(produto);
     }
 
+    @TokenRequired
     @GetMapping
     public List<Produto> buscarTodos(Produto filter) {
         return service.buscarTodos(filter);
@@ -58,7 +59,7 @@ public class ProdutoApi {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{produtoId}")
-    public void deletar(@PathVariable Integer produtoId){
+    public void deletar(@PathVariable Integer produtoId) {
         service.deletar(produtoId);
     }
 

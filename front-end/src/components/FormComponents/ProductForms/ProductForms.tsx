@@ -43,7 +43,6 @@ function MultiSelect({ typesList, label, handleMeat, handleSlice, clear }: Selec
   };
 
   useEffect(() => {
-    console.log('select: ' + meatType);
     handleMeat ? handleMeat(meatType) : null
   }, [meatType]);
 
@@ -167,9 +166,6 @@ const ProductForms = () => {
 
   };
 
-
-  console.log(product)
-
   useMemo(() => {
     const fetchTypes = async () => {
       const dataTypes = await getMeatTypes();
@@ -231,7 +227,6 @@ const ProductForms = () => {
         setProduct(clearForm)
         return response;
       } else {
-        console.log("caiu no erro")
         if (typeof (product.nome) !== "string") {
           return formError("Insira um nome");
         }
@@ -253,7 +248,6 @@ const ProductForms = () => {
       }
 
     } catch {
-      console.error("erro");
     }
   };
 
