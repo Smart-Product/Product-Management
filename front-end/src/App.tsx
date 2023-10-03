@@ -14,6 +14,7 @@ import UserForms from "./components/FormComponents/UserForms/UserForms";
 
 const theme = createTheme();
 function App() {
+  console.log("APARECI")
   return (
     <>
       <CssBaseline />
