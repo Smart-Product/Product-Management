@@ -39,11 +39,9 @@ public class Usuario {
     private String nome;
 
     @Column(name = "cpf")
-    @CPF(message = "{campo.cpf.invalido}")
     private String cpf;
 
     @Column(name = "email")
-    @Email(message = "{campo.email.invalido}")
     private String email;
 
     @Column(name = "senha")
