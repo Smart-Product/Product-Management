@@ -169,37 +169,28 @@ const ProductForms = () => {
   useMemo(() => {
     const fetchTypes = async () => {
       const dataTypes = await getMeatTypes();
-      console.log(dataTypes)
       setListMeatTypes(dataTypes)
     };
-
     fetchTypes();
   }, []);
 
   const fetchTypeSlices = async (meatType: string | null) => {
     const dataSlices: ISliceTypes[] = await getSliceTypes(meatType);
-    console.log('cortes: ', dataSlices)
     setListSliceTypes(dataSlices);
-
   };
 
   const handleTypeMeat = async (meatType: string | null) => {
-
     await fetchTypeSlices(meatType);
-
   };
 
   const handleTypeSlice = (sliceType: number) => {
-
     setProduct({ ...product, tipoCorteCarne: { caracteristicaId: sliceType } })
-
-    //todo: inserir este tipo de corte no formulario
   };
 
   const createProduct = async (product: IProduct) => {
     let date: string = product.dataValidade ?? ""
-    let dateString = new Date(Date.parse(date))
-
+    let dateString = new Date(Date.parse(date));
+    const token: string | null = localStorage.getItem("token")
     try {
       if (dateString < new Date()) {
         formError("O produto está vencido!");
@@ -213,7 +204,7 @@ const ProductForms = () => {
         product.quantidadePeca &&
         product.tipoCorteCarne
       ) {
-        const response = await postProducts(product);
+        const response = await postProducts(token, product);
         ProductCreateSuccess();
         const clearForm: IProduct = {
           produtoId: 0,
@@ -249,7 +240,11 @@ const ProductForms = () => {
         }
       }
 
-    } catch {
+    } catch(error: any) {
+      if(error.response == undefined) {
+        localStorage.clear()
+        navigate("/login")
+      }
     }
   };
 

@@ -37,28 +37,32 @@ public class ProdutoApi {
     private ProdutoRepository produtoRepository;
 
     @PostMapping
+    @TokenRequired
     public Produto cadastrar(@RequestBody @Valid Produto produto) {
         return service.salvar(produto);
     }
 
-    @TokenRequired
     @GetMapping
+    @TokenRequired
     public List<Produto> buscarTodos(Produto filter) {
         return service.buscarTodos(filter);
     }
 
     @GetMapping("/{id}")
+    @TokenRequired
     public Produto obterDadosPorId(@PathVariable Integer id) {
         return service.obterDadosPorId(id);
     }
 
     @PutMapping
+    @TokenRequired
     public void editar(@Valid @RequestBody Produto produto) {
         service.editar(produto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{produtoId}")
+    @TokenRequired
     public void deletar(@PathVariable Integer produtoId) {
         service.deletar(produtoId);
     }

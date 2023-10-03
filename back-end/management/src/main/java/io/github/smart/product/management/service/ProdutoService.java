@@ -9,6 +9,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import io.github.smart.product.management.context.AppProviders;
@@ -37,6 +38,7 @@ public class ProdutoService {
 		return produtoRepository.findById(produtoId).orElseThrow(() -> new ProductNotFoundException());
 	}
 
+	@Transactional
 	public void editar(Produto produtoNovo) {
 		produtoRepository.findById(produtoNovo.getProdutoId())
 				.map((produtoAntigo) -> {
@@ -46,18 +48,19 @@ public class ProdutoService {
 				.orElseThrow(() -> new ProductNotFoundException());
 	}
 
+	@Transactional
 	public Produto salvar(Produto produto) {
-		// JwtClaims claims = AppProviders.JWT_CLAIMS.get();
-		// produto.setUsuario(usuarioRepository.findById(claims.getUsuarioId()).get());
+		JwtClaims claims = AppProviders.JWT_CLAIMS.get();
+		produto.setUsuario(usuarioRepository.findById(claims.getUsuarioId()).get());
 		return produtoRepository.save(produto);
 	}
-	
-	public void deletar(Integer produtoId){
-		Optional<Produto> produto = produtoRepository.findById(produtoId);
 
-        if(produto.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        produtoRepository.deleteById(produtoId);
+	@Transactional
+	public void deletar(Integer produtoId) {
+		produtoRepository.findById(produtoId).map((produto) -> {
+			produtoRepository.deleteById(produto.getProdutoId());
+			return produto;
+		}).orElseThrow(() -> new ProductNotFoundException());
+
 	}
 }

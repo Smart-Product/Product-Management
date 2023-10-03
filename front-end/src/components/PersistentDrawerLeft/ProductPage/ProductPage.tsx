@@ -107,17 +107,32 @@ export default function ProductPage() {
   const navigate = useNavigate();
   //Array que vem da API é inserido aqui
   const [produtos, setProdutos] = useState<IProduct[]>([])
+  const token: string | null = localStorage.getItem("token")
 
   function search(response: IProduct[]) {
-    setProdutos([])
-    return setProdutos(response);
+    try {
+      setProdutos([])
+      return setProdutos(response);
+    } catch (error: any) {
+      if(error.response == undefined) {
+        localStorage.clear()
+        navigate("/login")
+      }
+    }
   }
 
   useEffect(() => {
     setProdutos([])
     const getData = async () => {
-      const response = await getProducts();
-      setProdutos(response)
+      try {
+        const response = await getProducts(token);
+        setProdutos(response);
+      } catch (error: any) {
+        if(error.response == undefined) {
+          localStorage.clear()
+          navigate("/login")
+        }
+      }
     }
     getData();
   }, []);
@@ -127,7 +142,7 @@ export default function ProductPage() {
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <SearchBar search={search} />
 
-        <IconButton aria-label="delete" size="large">
+        <IconButton aria-label="adicionar" size="large">
           <AddIcon onClick={() => navigate("/adicionar_produto")} />
         </IconButton>
       </Box>

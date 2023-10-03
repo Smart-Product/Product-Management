@@ -38,18 +38,18 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         if (tokenRequiredAnnotation != null) {
             if (token == null) {
                 throw new ResourceNotAllowedException();
+            } else {
+                token = token.replace("Bearer ", "").replace("bearer ", "");
+                token = !token.equals("null") ? token : null;
+                if (token != null) {
+                    JwtClaims claims = jwtService.getClaims(token);
+                    AppProviders.JWT_CLAIMS.set(claims);
+                    token = jwtService.generateToken(claims);
+                    response.setHeader("Authorization", token);
+                    AppProviders.JWT_CURRENT.set(token);
+                }
             }
         }
-        if (token != null) {
-            token = token.replace("Bearer ", "").replace("bearer ", "");
-            token = !token.equals("null") ? token : null;
-            if (token != null) {
-                JwtClaims claims = jwtService.getClaims(token);
-                AppProviders.JWT_CLAIMS.set(claims);
-                token = jwtService.generateToken(claims);
-                response.setHeader("Authorization", token);
-                AppProviders.JWT_CURRENT.set(token);
-            }
-        }
+
     }
 }

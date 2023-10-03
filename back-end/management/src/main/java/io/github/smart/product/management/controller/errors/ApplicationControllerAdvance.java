@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import io.github.smart.product.management.exception.ExpiredTokenException;
 import io.github.smart.product.management.exception.InvalidTokenException;
+import io.github.smart.product.management.exception.ProductNotFoundException;
 import io.github.smart.product.management.exception.ResourceNotAllowedException;
 import io.github.smart.product.management.exception.SenhaIncorretaException;
 import io.github.smart.product.management.exception.UserFoundException;
@@ -64,6 +65,13 @@ public class ApplicationControllerAdvance {
 	@ExceptionHandler(UserFoundException.class)
 	@ResponseStatus(HttpStatus.FOUND)
 	public ApiErrors handlerRuntimeException(UserFoundException ex) {
+		String messageError = ex.getMessage();
+		return new ApiErrors(messageError);
+	}
+
+	@ExceptionHandler(ProductNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ApiErrors handlerRuntimeException(ProductNotFoundException ex) {
 		String messageError = ex.getMessage();
 		return new ApiErrors(messageError);
 	}
