@@ -13,7 +13,7 @@ import {
   getSliceTypes,
   postProducts,
 } from "../../../services/ProductServices";
-import { ProductFormContainer } from "./ProductForms.styles";
+import { ProductFormContainer } from "../ProductForms.styles";
 import { ProductCreateSuccess, ProductEditedSuccess, formError } from "../../../utils/utils";
 import { PageLayout } from "../../PersistentDrawerLeft/PageLayout";
 import { useParams } from 'react-router-dom';
@@ -25,11 +25,9 @@ interface SelectProps {
   handleMeat?: (value: string | null) => void;
   handleSlice?: (value: number) => void;
   clear?: boolean;
-  descricao: string | null;
-  caracteristicaId: number | null;
 }
 
-function MultiSelect({ typesList, label, handleMeat, handleSlice, clear, descricao, caracteristicaId }: SelectProps) {
+function MultiSelect({ typesList, label, handleMeat, handleSlice, clear }: SelectProps) {
   const [meatType, setMeatType] = useState<string | null>(null);
   const [sliceType, setSliceType] = useState<string | null>(null);
 
@@ -61,14 +59,6 @@ function MultiSelect({ typesList, label, handleMeat, handleSlice, clear, descric
     }
   }, [clear])
 
-  useEffect(() => {
-    if (descricao) {
-      setMeatType(descricao)
-    } else {
-      setSliceType(caracteristicaId?.toString())
-    }
-  }, [descricao, caracteristicaId])
-
   return (
     <FormControl size="medium">
       <InputLabel id="demo-select-small-label">{label}</InputLabel>
@@ -90,7 +80,6 @@ function MultiSelect({ typesList, label, handleMeat, handleSlice, clear, descric
     </FormControl>
   );
 }
-
 
 interface NumericInputProps {
   name: string;
@@ -149,7 +138,6 @@ function NumericInput({ name, label, value, handleInput }: NumericInputProps) {
 
 
 const ProductPage = () => {
-  let { id } = useParams();
 
   const [product, setProduct] = useState<IProduct>();
 
@@ -159,8 +147,6 @@ const ProductPage = () => {
     []
   );
   const [titlePageLayout, setTitlePageLayout] = useState("")
-
-  console.log(product)
 
   const navigate = useNavigate();
 
@@ -179,19 +165,9 @@ const ProductPage = () => {
       setListMeatTypes(dataTypes)
     };
 
-    if (id) {
-      const getProductById = async (id: number) => {
-        const request = await getProductsId(token, id)
-        return setProduct(request);
-      }
-      const data = getProductById(parseInt(id))
-      setProduct(data)
-      setTitlePageLayout("Editar Produto")
-      fetchTypes();
-    } else {
-      fetchTypes();
-      setTitlePageLayout("Adicionar Produto")
-    }
+    fetchTypes();
+    setTitlePageLayout("Adicionar Produto")
+
 
 
   }, []);
@@ -219,7 +195,6 @@ const ProductPage = () => {
 
   };
 
-
   const fetchTypeSlices = async (meatType: string | null) => {
     const dataSlices: ISliceTypes[] = await getSliceTypes(meatType);
     console.log('cortes: ', dataSlices)
@@ -240,7 +215,7 @@ const ProductPage = () => {
     //todo: inserir este tipo de corte no formulario
   };
 
-  const createProduct = async (product: IProduct) => {
+  const createProduct = async (token: string | null, product: IProduct) => {
     let date: string = product.dataValidade ?? ""
     let dateString = new Date(Date.parse(date))
 
@@ -257,7 +232,7 @@ const ProductPage = () => {
         product.quantidadePeca &&
         product.tipoCorteCarne
       ) {
-        const response = await postProducts(product);
+        const response = await postProducts(token, product);
         ProductCreateSuccess();
         const clearForm: IProduct = {
           produtoId: 0,
@@ -309,64 +284,13 @@ const ProductPage = () => {
     }
   };
 
-  const editProduct = async (product: IProduct) => {
-    let date: string = product.dataValidade ?? ""
-    let dateString = new Date(Date.parse(date))
-
-    try {
-      if (dateString < new Date()) {
-        formError("O produto está vencido!");
-        return;
-      }
-      else if (
-        product.nome &&
-        product.descricao &&
-        product.precoKg &&
-        product.pesoPecaKg &&
-        product.quantidadePeca &&
-        product.tipoCorteCarne
-      ) {
-        const response = await PutProduct(token, product);
-        ProductEditedSuccess()
-        return response;
-      } else {
-        console.log("caiu no erro")
-        if (typeof (product.nome) !== "string") {
-          return formError("Insira um nome");
-        }
-        if (typeof (product.descricao) !== "string") {
-          formError("Insira uma descrição");
-        }
-        if (typeof (product.precoKg) !== "number") {
-          formError("O preço deve ser positivo");
-        }
-        if (typeof (product.pesoPecaKg) !== "number") {
-          formError("O peso deve ser positivo");
-        }
-        if (typeof (product.quantidadePeca) !== "number") {
-          formError("A quantidade deve ser positiva");
-        }
-        if (typeof (product.tipoCorteCarne?.caracteristicaId) !== "number") {
-          formError("Escolha um tipo de corte");
-        }
-      }
-
-    } catch {
-      console.error("erro");
-    }
-
-  }
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (id) {
-      editProduct(product)
-      return
-    } else if (product?.tipoCorteCarne?.caracteristicaId == 0) {
+    if (product?.tipoCorteCarne?.caracteristicaId == 0) {
       formError("Insira o tipo de carne")
       return
     } else {
-      createProduct(product!)
+      createProduct(token, product!)
       setClear(true)
     }
   };
@@ -414,7 +338,6 @@ const ProductPage = () => {
               label="Tipos de Carne"
               handleMeat={handleTypeMeat}
               clear={clear}
-              descricao={id ? product?.tipoCorteCarne?.descricao : ""}
             />
           ) : (
             <TextField label="Tipos de Carne" disabled />
@@ -427,7 +350,6 @@ const ProductPage = () => {
               label="Tipos de Corte"
               handleSlice={handleTypeSlice}
               clear={clear}
-              caracteristicaId={id ? product?.tipoCorteCarne?.caracteristicaId : ""}
 
             />
           ) : (
@@ -460,7 +382,7 @@ const ProductPage = () => {
             />
 
             <Button variant="contained" type="submit" startIcon={<AddIcon />}>
-              {id ? 'Salvar' : 'Adicionar'}
+              Adicionar
             </Button>
           </Box>
         </ProductFormContainer>

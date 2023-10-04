@@ -92,7 +92,7 @@ const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number | undefine
                     {produto.descricao}
                   </TableCell>
                   <TableCell align="right">
-                    {Math.round((produto?.quantidadePeca ?? 0) * (produto?.precoKg ?? 0) * 100) / 100}
+                    {Math.round(((produto?.quantidadePeca ?? 0) * (produto?.pesoPecaKg ?? 0)) * (produto?.precoKg ?? 0) * 100) / 100}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -101,14 +101,16 @@ const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number | undefine
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
               <Box sx={{
                 width: '100px', display: "flex",
-                justifyContent: "space-between"
+                justifyContent: "center"
+                // justifyContent: "space-between"
               }}>
                 <IconButton aria-label="delete" size="medium" onClick={() => navigate(`/produto/${produto.produtoId}`)}>
                   <CreateIcon />
                 </IconButton>
-                <IconButton aria-label="delete" size="medium" onClick={() => handleOpenModal(produto.produtoId)}>
+                
+                {/* <IconButton aria-label="delete" size="medium" onClick={() => handleOpenModal(produto.produtoId)}>
                   <DeleteIcon />
-                </IconButton>
+                </IconButton> */}
               </Box>
             </Box>
 
@@ -121,20 +123,24 @@ const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number | undefine
 }
 
 export default function ProductPage() {
+
   const navigate = useNavigate();
   //Array que vem da API é inserido aqui
   const [produtos, setProdutos] = useState<IProduct[]>([])
+
   const [open, setOpen] = React.useState(false);
+
   const [productId, setProductId] = useState<number>();
+
   const token: string | null = localStorage.getItem("token")
 
   const handleOpen = (productId: number | undefined) => {
     setOpen(true);
     setProductId(productId)
   }
+
   const handleClose = () => setOpen(false);
 
-  console.log(productId)
   async function deleteProduct(token: string | null, id: number | undefined) {
     console.log("Id delete :", id)
     await deleteProductById(token, id);

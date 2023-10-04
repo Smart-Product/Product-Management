@@ -61,7 +61,6 @@ export async function getProductsId(token: string | null, id: number): Promise<I
 
 }
 
-
 export async function PutProduct(token: string | null, updateData: IProduct): Promise<void> {
   const config = {
     headers: {
