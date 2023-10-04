@@ -7,12 +7,16 @@ import { IMeatTypes } from "../../../interface/IMeatTypes";
 import { IProduct } from "../../../interface/IProduct";
 import { ISliceTypes } from "../../../interface/ISliceTypes";
 import {
+  PutProduct,
   getMeatTypes,
+  getProductsId,
   getSliceTypes,
   postProducts,
 } from "../../../services/ProductServices";
-import { ProductFormContainer } from "./ProductForms.styles";
-import { ProductCreateSuccess, formError } from "../../../utils/utils";
+import { ProductFormContainer } from "../ProductForms.styles";
+import { ProductCreateSuccess, ProductEditedSuccess, formError } from "../../../utils/utils";
+import { PageLayout } from "../../PersistentDrawerLeft/PageLayout";
+import { useParams } from 'react-router-dom';
 
 
 interface SelectProps {
@@ -43,6 +47,7 @@ function MultiSelect({ typesList, label, handleMeat, handleSlice, clear }: Selec
   };
 
   useEffect(() => {
+    console.log('select: ' + meatType);
     handleMeat ? handleMeat(meatType) : null
   }, [meatType]);
 
@@ -75,7 +80,6 @@ function MultiSelect({ typesList, label, handleMeat, handleSlice, clear }: Selec
     </FormControl>
   );
 }
-
 
 interface NumericInputProps {
   name: string;
@@ -125,7 +129,7 @@ function NumericInput({ name, label, value, handleInput }: NumericInputProps) {
         name={name}
         label={label}
         required
-        value={value}
+        value={value || ''}
         onChange={handleInputChange}
       />
     )}
@@ -133,15 +137,40 @@ function NumericInput({ name, label, value, handleInput }: NumericInputProps) {
 }
 
 
-const ProductForms = () => {
+const ProductPage = () => {
+
   const [product, setProduct] = useState<IProduct>();
+
   const [listMeatTypes, setListMeatTypes] = useState<IMeatTypes[]>([]);
+
   const [listSliceTypes, setListSliceTypes] = useState<ISliceTypes[]>(
     []
   );
+  const [titlePageLayout, setTitlePageLayout] = useState("")
+
   const navigate = useNavigate();
+
   const [clear, setClear] = useState(false)
+
   const [isNegativeNumber, setisNegativeNumber] = useState(false);
+
+  const token: string | null = localStorage.getItem("token")
+
+
+
+  useMemo(() => {
+    const fetchTypes = async () => {
+      const dataTypes = await getMeatTypes();
+      console.log(dataTypes)
+      setListMeatTypes(dataTypes)
+    };
+
+    fetchTypes();
+    setTitlePageLayout("Adicionar Produto")
+
+
+
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -166,31 +195,30 @@ const ProductForms = () => {
 
   };
 
-  useMemo(() => {
-    const fetchTypes = async () => {
-      const dataTypes = await getMeatTypes();
-      setListMeatTypes(dataTypes)
-    };
-    fetchTypes();
-  }, []);
-
   const fetchTypeSlices = async (meatType: string | null) => {
     const dataSlices: ISliceTypes[] = await getSliceTypes(meatType);
+    console.log('cortes: ', dataSlices)
     setListSliceTypes(dataSlices);
+
   };
 
   const handleTypeMeat = async (meatType: string | null) => {
+
     await fetchTypeSlices(meatType);
+
   };
 
   const handleTypeSlice = (sliceType: number) => {
+
     setProduct({ ...product, tipoCorteCarne: { caracteristicaId: sliceType } })
+
+    //todo: inserir este tipo de corte no formulario
   };
 
-  const createProduct = async (product: IProduct) => {
+  const createProduct = async (token: string | null, product: IProduct) => {
     let date: string = product.dataValidade ?? ""
-    let dateString = new Date(Date.parse(date));
-    const token: string | null = localStorage.getItem("token")
+    let dateString = new Date(Date.parse(date))
+
     try {
       if (dateString < new Date()) {
         formError("O produto está vencido!");
@@ -220,6 +248,7 @@ const ProductForms = () => {
         setProduct(clearForm)
         return response;
       } else {
+        console.log("caiu no erro")
         if (typeof (product.nome) !== "string") {
           return formError("Insira um nome");
         }
@@ -240,11 +269,8 @@ const ProductForms = () => {
         }
       }
 
-    } catch(error: any) {
-      if(error.response == undefined) {
-        localStorage.clear()
-        navigate("/login")
-      }
+    } catch {
+      console.error("erro");
     }
   };
 
@@ -260,37 +286,35 @@ const ProductForms = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (product?.tipoCorteCarne?.caracteristicaId == 0) {
       formError("Insira o tipo de carne")
       return
     } else {
-      createProduct(product!)
+      createProduct(token, product!)
       setClear(true)
     }
   };
 
-  return (
-    <>
+  return (<>
+    <PageLayout title={titlePageLayout}>
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "column",
+          minWidth: "80%"
         }}
       >
         <Box
           sx={{
             display: "flex",
-            width: "100vw",
-            justifyContent: "space-between",
+            width: "94vw",
+            justifyContent: "flex-end",
+            mt: 1,
           }}
         >
-          <Box sx={{ textAlign: "center", width: "98%" }}>
-            <h1>Adicione um produto novo !</h1>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
             <IconButton onClick={() => navigate("/")}>
               <CloseIcon />
             </IconButton>
@@ -304,7 +328,7 @@ const ProductForms = () => {
             name="nome"
             required
             placeholder="Nome..."
-            value={product?.nome}
+            value={product?.nome || ''}
             onChange={handleInputChange}
           />
 
@@ -332,7 +356,7 @@ const ProductForms = () => {
             <TextField label="Escolha um tipo de Carne" disabled />
           )}
 
-          <NumericInput name={"pesoPecaKg"} label={"Peso em kg"} value={product?.pesoPecaKg} handleInput={handleInputChange} />
+          <NumericInput name={"pesoPecaKg"} label={"Peso em kg"} value={product?.pesoPecaKg!} handleInput={handleInputChange} />
 
           <NumericInput name={"quantidadePeca"} label={"Quantidade"} value={product?.quantidadePeca} handleInput={handleInputChange} />
 
@@ -343,17 +367,17 @@ const ProductForms = () => {
             type="date"
             name="dataValidade"
             required
-            value={product?.dataValidade}
+            value={product?.dataValidade || ''}
             onChange={handleInputChange}
           />
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, minWidth: "100%" }}>
             <textarea
               name="descricao"
               id="descricao"
               placeholder="Descrição..."
               onInput={() => autoResize("descricao")}
-              value={product?.descricao}
+              value={product?.descricao || ''}
               onChange={handleInputChange}
             />
 
@@ -363,8 +387,10 @@ const ProductForms = () => {
           </Box>
         </ProductFormContainer>
       </Box>
-    </>
+    </PageLayout>
+  </>
+
   );
 };
 
-export default ProductForms;
+export default ProductPage;

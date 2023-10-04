@@ -7,8 +7,8 @@ export interface IProduct {
   precoKg?: number;
   dataValidade?: string;
   tipoCorteCarne?: {
-      caracteristicaId? : number;
-      descricao?: string,
+    caracteristicaId?: number;
+    descricao?: string | null,
     descricaoEspecifica?: string
   }
 }

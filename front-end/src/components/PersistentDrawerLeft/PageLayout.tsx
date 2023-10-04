@@ -76,7 +76,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-export const PageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const PageLayout: React.FC<{ children: React.ReactNode, title?: string | null }> = ({ children, title }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -140,14 +140,16 @@ export const PageLayout: React.FC<{ children: React.ReactNode }> = ({ children }
             sx={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
-              width: 200,
+              justifyContent: "space-around",
+              width: 230
             }}
           >
             <StoreIcon />
 
             <Typography variant="h6" noWrap component="div">
-              Product Manager
+              {title ? (<> {title} </>
+              ) : (<>Product Management</>
+              )}
             </Typography>
           </Box>
         </Box>

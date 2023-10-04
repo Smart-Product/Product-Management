@@ -1,24 +1,26 @@
-import { BrowserRouter, Route, Routes as Router } from "react-router-dom";
-import CreateAccount from "../components/HorizontalLinearStepper/CreateAccount";
-import Login from "../components/Login/Login";
-import DataProducts from "../components/PersistentDrawerLeft/DataProducts/DataProducts";
-import { PageLayout } from "../components/PersistentDrawerLeft/PageLayout";
-import ProductPage from "../components/PersistentDrawerLeft/ProductPage/ProductPage";
-import SalesPage from "../components/PersistentDrawerLeft/SalesPage/SalesPage";
-const Routes = () => {
-  return (
-    <>
-      {/* <BrowserRouter>
-        <Router>
-          <Route path="/" element={<PageLayout children={<ProductPage />} />} />
-          <Route path="/sales" element={<SalesPage />} />
-          <Route path="/data" element={<DataProducts />} />
-          <Route path="/create-account" element={<CreateAccount />} />
-          <Route path="/login" element={<Login />} />
-        </Router>
-      </BrowserRouter> */}
-    </>
-  );
-};
+import { Routes as ReactRoutes, Route } from "react-router-dom";
+import ProductListPage from "../components/PersistentDrawerLeft/ProductListPage/ProductListPage";
 
-export default Routes;
+import ProductEditPage from "../components/FormComponents/ProductEditPage/ProductEditPage";
+import ProductPage from "../components/FormComponents/ProductPage/ProductPage";
+import UserForms from "../components/FormComponents/UserForms/UserForms";
+import Login from "../components/Login/Login";
+import DataPage from "../components/PersistentDrawerLeft/DataProducts/DataProducts";
+import SalesPage from "../components/PersistentDrawerLeft/SalesPage/SalesPage";
+
+//todo : arrumar os nomes com o padrao Page
+
+export function Routes() {
+  return (
+    <ReactRoutes>
+      <Route path="/" element={<ProductListPage />} />
+      <Route path="/sales" element={<SalesPage />} />
+      <Route path="/data" element={<DataPage />} />
+      <Route path="/produto" element={<ProductPage />} />
+      <Route path="/produto/:id" element={<ProductEditPage />} />
+      <Route path="/produto/delete/:id" element={<ProductListPage />} />
+      <Route path="/cadastro" element={<UserForms />} />
+      <Route path="/login" element={<Login />} />
+    </ReactRoutes>
+  )
+}
