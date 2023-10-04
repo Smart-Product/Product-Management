@@ -9,6 +9,7 @@ import { Routes } from "./Routes/Routes";
 const theme = createTheme();
 
 function App() {
+  console.log("APARECI")
   return (
     <>
       <CssBaseline />

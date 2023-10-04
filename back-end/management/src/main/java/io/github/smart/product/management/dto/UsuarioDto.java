@@ -2,7 +2,10 @@ package io.github.smart.product.management.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.br.CPF;
 
 import io.github.smart.product.management.model.Produto;
 import lombok.AllArgsConstructor;
@@ -20,9 +23,11 @@ public class UsuarioDto {
     private String nome;
 
     @NotEmpty(message = "{campo.cpf.obrigatorio}")
+    @CPF(message = "{campo.cpf.invalido}")
     private String cpf;
 
     @NotEmpty(message = "{campo.email.obrigatorio}")
+    @Email(message = "{campo.email.invalido}")
     private String email;
 
     @NotEmpty(message = "{campo.senha.obrigatorio}")

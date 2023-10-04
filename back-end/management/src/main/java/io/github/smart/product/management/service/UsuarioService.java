@@ -10,7 +10,7 @@ import io.github.smart.product.management.dto.CredentialsDto;
 import io.github.smart.product.management.dto.TokenDto;
 import io.github.smart.product.management.dto.UsuarioDto;
 import io.github.smart.product.management.exception.SenhaIncorretaException;
-import io.github.smart.product.management.exception.UserCPFFoundException;
+import io.github.smart.product.management.exception.UserFoundException;
 import io.github.smart.product.management.model.Usuario;
 import io.github.smart.product.management.repository.UsuarioRepository;
 import io.github.smart.product.management.security.jwt.JwtClaims;
@@ -60,7 +60,10 @@ public class UsuarioService {
     public Usuario salvar(UsuarioDto usuarioDto) {
         try {
             if (usuarioRepository.findByCpf(usuarioDto.getCpf()).isPresent()) {
-                throw new UserCPFFoundException();
+                throw new UserFoundException("Usuário com CPF já cadastrado!");
+            }
+            if (usuarioRepository.findByEmail(usuarioDto.getEmail()).isPresent()) {
+                throw new UserFoundException("Usuário com Email já cadastrado!");
             }
             if (!usuarioDto.getConfirmarSenha().equals(usuarioDto.getSenha())) {
                 throw new SenhaIncorretaException();
@@ -70,7 +73,7 @@ public class UsuarioService {
             usuario.setSenha(senhaCriptografada);
 
             return usuarioRepository.save(usuario);
-        } catch (UserCPFFoundException | SenhaIncorretaException e) {
+        } catch (UserFoundException | SenhaIncorretaException e) {
             throw e;
         }
     }

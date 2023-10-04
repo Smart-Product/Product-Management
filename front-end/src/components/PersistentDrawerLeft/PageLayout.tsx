@@ -101,6 +101,7 @@ export const PageLayout: React.FC<{ children: React.ReactNode, title?: string | 
   };
 
   const handleNavigate = (path: string) => {
+    localStorage.clear();
     return navigate(path);
   };
 

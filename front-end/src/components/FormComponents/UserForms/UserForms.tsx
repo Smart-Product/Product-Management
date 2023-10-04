@@ -96,7 +96,7 @@ const UserForms = () => {
             <h1>Cadastro de usuário</h1>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => navigate("/")}>
+            <IconButton onClick={() => navigate("/login")}>
               <CloseIcon />
             </IconButton>
           </Box>

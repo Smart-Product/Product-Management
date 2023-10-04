@@ -168,6 +168,8 @@ const ProductPage = () => {
 
   const [isNegativeNumber, setisNegativeNumber] = useState(false);
 
+  const token: string | null = localStorage.getItem("token")
+
 
 
   useMemo(() => {
@@ -179,7 +181,7 @@ const ProductPage = () => {
 
     if (id) {
       const getProductById = async (id: number) => {
-        const request = await getProductsId(id)
+        const request = await getProductsId(token, id)
         return setProduct(request);
       }
       const data = getProductById(parseInt(id))
@@ -324,7 +326,7 @@ const ProductPage = () => {
         product.quantidadePeca &&
         product.tipoCorteCarne
       ) {
-        const response = await PutProduct(product);
+        const response = await PutProduct(token, product);
         ProductEditedSuccess()
         return response;
       } else {

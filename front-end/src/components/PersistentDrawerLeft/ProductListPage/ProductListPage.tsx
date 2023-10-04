@@ -1,7 +1,13 @@
-import React, { useEffect, useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
+import CreateIcon from '@mui/icons-material/Create';
+import DeleteIcon from "@mui/icons-material/Delete";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { Backdrop, Button, Fade, Modal } from "@mui/material";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,25 +15,20 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import CreateIcon from '@mui/icons-material/Create';
-import SearchBar from "../../DesignComponents/SearchBar/SearchBar";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { deleteProductById, getProducts, getProductsId } from "../../../services/ProductServices";
 import { IProduct } from "../../../interface/IProduct";
+import { deleteProductById, getProducts } from "../../../services/ProductServices";
+import SearchBar from "../../DesignComponents/SearchBar/SearchBar";
 import { PageLayout } from "../PageLayout";
-import { Button, Backdrop, Fade, Modal } from "@mui/material";
-
+import { formatDate } from "../../../utils/utils";
 
 //Row = Linha 
-const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number) => void }> = ({ produto, handleOpenModal }) => {
-  const navigate = useNavigate();
+const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number | undefined) => void }> = ({ produto, handleOpenModal }) => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
+  // Function to toggle the 'open' state
   const toggleOpen = () => {
     setOpen(!open);
   };
@@ -35,7 +36,6 @@ const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number) => void }
   useEffect(() => {
     setOpen(false);
   }, [produto]);
-
   return (<>
     <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
       <TableCell>
@@ -52,7 +52,7 @@ const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number) => void }
       </TableCell>
       <TableCell align="center">{produto.pesoPecaKg} kg</TableCell>
       <TableCell align="center">{produto.quantidadePeca}</TableCell>
-      <TableCell align="center">{produto.precoKg} R$</TableCell>
+      <TableCell align="center">{produto.precoKg}</TableCell>
     </TableRow>
     <TableRow>
       <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -66,7 +66,7 @@ const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number) => void }
               }}
             >
               <Typography variant="h6" gutterBottom component="div">
-                Detalhes
+                Histórico
               </Typography>
 
             </Box>
@@ -74,7 +74,7 @@ const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number) => void }
             <Table size="small" aria-label="purchases">
               <TableHead>
                 <TableRow>
-                  <TableCell>Data</TableCell>
+                  <TableCell>Vencimento</TableCell>
                   <TableCell>Tipo de Carne</TableCell>
                   <TableCell>Tipo de Corte</TableCell>
                   <TableCell align="center">Descrição</TableCell>
@@ -84,7 +84,7 @@ const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number) => void }
               <TableBody>
                 <TableRow key={produto.dataValidade}>
                   <TableCell component="th" scope="row">
-                    {produto.dataValidade}
+                    {formatDate(produto.dataValidade)}
                   </TableCell>
                   <TableCell> {produto.tipoCorteCarne?.descricao} </TableCell>
                   <TableCell> {produto.tipoCorteCarne?.descricaoEspecifica} </TableCell>
@@ -120,34 +120,51 @@ const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number) => void }
   );
 }
 
-export default function ProductListPage() {
-
+export default function ProductPage() {
+  const navigate = useNavigate();
   //Array que vem da API é inserido aqui
   const [produtos, setProdutos] = useState<IProduct[]>([])
-  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [productId, setProductId] = useState<number>();
-  const handleOpen = (productId: number) => {
+  const token: string | null = localStorage.getItem("token")
+
+  const handleOpen = (productId: number | undefined) => {
     setOpen(true);
     setProductId(productId)
   }
   const handleClose = () => setOpen(false);
 
-  function search(response: IProduct[]) {
-    setProdutos([])
-    return setProdutos(response);
-  }
   console.log(productId)
-  async function deleteProduct(id: number) {
-    await deleteProductById(id);
+  async function deleteProduct(token: string | null, id: number | undefined) {
+    console.log("Id delete :", id)
+    await deleteProductById(token, id);
     handleClose();
+  }
+
+  function search(response: IProduct[]) {
+    try {
+      setProdutos([])
+      return setProdutos(response);
+    } catch (error: any) {
+      if (error.response == undefined) {
+        localStorage.clear()
+        navigate("/login")
+      }
+    }
   }
 
   useEffect(() => {
     setProdutos([])
     const getData = async () => {
-      const response = await getProducts();
-      setProdutos(response)
+      try {
+        const response = await getProducts(token);
+        setProdutos(response);
+      } catch (error: any) {
+        if (error.response == undefined) {
+          localStorage.clear()
+          navigate("/login")
+        }
+      }
     }
     getData();
   }, []);
@@ -158,7 +175,7 @@ export default function ProductListPage() {
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <SearchBar search={search} />
 
-          <IconButton aria-label="delete" size="large">
+          <IconButton aria-label="adicionar" size="large">
             <AddIcon onClick={() => navigate("/produto")} />
           </IconButton>
         </Box>
@@ -195,7 +212,7 @@ export default function ProductListPage() {
                 <Typography id="transition-modal-title" variant="h6" component="h2">
                   Você quer mesmo deletar este produto ?
                 </Typography>
-                <Button variant="outlined" onClick={() => deleteProduct(productId)} sx={{ mt: 2 }}>
+                <Button variant="outlined" onClick={() => deleteProduct(token, productId)} sx={{ mt: 2 }}>
                   Sim
                 </Button>
                 <Button variant="outlined" onClick={() => handleClose()} sx={{ mt: 2 }}>

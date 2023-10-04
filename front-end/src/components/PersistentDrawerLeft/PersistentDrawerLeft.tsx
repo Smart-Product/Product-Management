@@ -104,6 +104,7 @@ export default function PersistentDrawerLeft() {
   };
 
   const handleNavigate = (path: string) => {
+    localStorage.clear();
     return navigate(path)
   }
 
