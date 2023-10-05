@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.smart.product.management.exception.ExpiredTokenException;
 import io.github.smart.product.management.exception.InvalidTokenException;
+import io.github.smart.product.management.exception.TokenExpiredException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -66,9 +67,11 @@ public class JwtService {
             }
             Jwts.parser().setSigningKey(getSigningKey()).parseClaimsJws(token);
         } catch (SignatureException | IllegalArgumentException | MalformedJwtException e) {
-            throw new InvalidTokenException();
+            throw e;
+        } catch (InvalidTokenException e) {
+            throw e;
         } catch (ExpiredJwtException e) {
-            throw new ExpiredTokenException();
+            throw new TokenExpiredException();
         }
     }
 

@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const ErrorException = (errors: any) => {
-  if (errors.response == undefined) {
+  if (errors.message == "Network Error") {
     toast.info("TOKEN expirado!"); 
   }else {
     const status = errors.response.status;

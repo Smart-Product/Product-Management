@@ -14,6 +14,7 @@ import io.github.smart.product.management.exception.InvalidTokenException;
 import io.github.smart.product.management.exception.ProductNotFoundException;
 import io.github.smart.product.management.exception.ResourceNotAllowedException;
 import io.github.smart.product.management.exception.SenhaIncorretaException;
+import io.github.smart.product.management.exception.TokenExpiredException;
 import io.github.smart.product.management.exception.UserFoundException;
 
 @RestControllerAdvice
@@ -30,6 +31,13 @@ public class ApplicationControllerAdvance {
 	@ExceptionHandler(ExpiredTokenException.class)
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	public ApiErrors handlerRuntimeException(ExpiredTokenException ex) {
+		String messageError = ex.getMessage();
+		return new ApiErrors(messageError);
+	}
+
+	@ExceptionHandler(TokenExpiredException.class)
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	public ApiErrors handlerRuntimeException(TokenExpiredException ex) {
 		String messageError = ex.getMessage();
 		return new ApiErrors(messageError);
 	}
