@@ -134,7 +134,7 @@ export async function deleteProductById(token: string | null, id: number | undef
     }
   }
   try {
-    await axios.delete(`${urlApi}/produtos/${id};`, config)
+    await axios.delete(`${urlApi}/produtos/${id}`, config)
     return console.log(
       "Product deleted: "
       , id)
