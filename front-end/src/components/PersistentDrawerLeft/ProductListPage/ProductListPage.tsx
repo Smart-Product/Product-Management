@@ -21,7 +21,7 @@ import { IProduct } from "../../../interface/IProduct";
 import { deleteProductById, getProducts } from "../../../services/ProductServices";
 import SearchBar from "../../DesignComponents/SearchBar/SearchBar";
 import { PageLayout } from "../PageLayout";
-import { formatDate } from "../../../utils/utils";
+import { formError, formatDate } from "../../../utils/utils";
 
 //Row = Linha 
 const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number | undefined) => void }> = ({ produto, handleOpenModal }) => {
@@ -101,16 +101,15 @@ const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number | undefine
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
               <Box sx={{
                 width: '100px', display: "flex",
-                justifyContent: "center"
-                // justifyContent: "space-between"
+                justifyContent: "space-between"
               }}>
                 <IconButton aria-label="delete" size="medium" onClick={() => navigate(`/produto/${produto.produtoId}`)}>
                   <CreateIcon />
                 </IconButton>
                 
-                {/* <IconButton aria-label="delete" size="medium" onClick={() => handleOpenModal(produto.produtoId)}>
+                <IconButton aria-label="delete" size="medium" onClick={() => handleOpenModal(produto.produtoId)}>
                   <DeleteIcon />
-                </IconButton> */}
+                </IconButton>
               </Box>
             </Box>
 
@@ -132,6 +131,8 @@ export default function ProductPage() {
 
   const [productId, setProductId] = useState<number>();
 
+  const [productDeleted, setProductDeleted] = useState<number>()
+
   const token: string | null = localStorage.getItem("token")
 
   const handleOpen = (productId: number | undefined) => {
@@ -142,9 +143,17 @@ export default function ProductPage() {
   const handleClose = () => setOpen(false);
 
   async function deleteProduct(token: string | null, id: number | undefined) {
-    console.log("Id delete :", id)
-    await deleteProductById(token, id);
-    handleClose();
+    console.log("Id delete :", productId)
+    try {
+
+      await deleteProductById(token, id);
+      handleClose();
+      setProductDeleted(id)
+    } catch (error) {
+      console.error(error)
+      formError("Não foi possível deletar este produto")
+    }
+    
   }
 
   function search(response: IProduct[]) {
@@ -174,6 +183,22 @@ export default function ProductPage() {
     }
     getData();
   }, []);
+
+  useEffect(() => {
+    setProdutos([])
+    const getData = async () => {
+      try {
+        const response = await getProducts(token);
+        setProdutos(response);
+      } catch (error: any) {
+        if (error.response == undefined) {
+          localStorage.clear()
+          navigate("/login")
+        }
+      }
+    }
+    getData()
+  }, [productDeleted]);
 
   return (
     <PageLayout>
