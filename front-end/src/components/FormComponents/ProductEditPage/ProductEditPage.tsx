@@ -174,8 +174,15 @@ const ProductEditPage = () => {
 
 
         const getProductById = async (id: number) => {
-            const request = await getProductsId(token, id)
-            return setProduct(request);
+            try {
+                const request = await getProductsId(token, id)
+                return setProduct(request);
+            } catch (error: any) {
+                if (error.message == "Network Error") {
+                    localStorage.clear()
+                    navigate("/login")
+                }
+            }
         }
         const data = getProductById(parseInt(id))
         setProduct(data)
@@ -280,7 +287,11 @@ const ProductEditPage = () => {
                 }
             }
 
-        } catch {
+        } catch(error: any) {
+            if (error.message == "Network Error") {
+                localStorage.clear()
+                navigate("/login")
+            }
             console.error("erro");
         }
 

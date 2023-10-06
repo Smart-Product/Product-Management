@@ -149,7 +149,11 @@ export default function ProductPage() {
       await deleteProductById(token, id);
       handleClose();
       setProductDeleted(id)
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message == "Network Error") {
+        localStorage.clear()
+        navigate("/login")
+      }
       console.error(error)
       formError("Não foi possível deletar este produto")
     }
@@ -161,7 +165,7 @@ export default function ProductPage() {
       setProdutos([])
       return setProdutos(response);
     } catch (error: any) {
-      if (error.response == undefined) {
+      if (error.message == "Network Error") {
         localStorage.clear()
         navigate("/login")
       }
@@ -175,7 +179,7 @@ export default function ProductPage() {
         const response = await getProducts(token);
         setProdutos(response);
       } catch (error: any) {
-        if (error.response == undefined) {
+        if (error.message == "Network Error") {
           localStorage.clear()
           navigate("/login")
         }
@@ -191,7 +195,7 @@ export default function ProductPage() {
         const response = await getProducts(token);
         setProdutos(response);
       } catch (error: any) {
-        if (error.response == undefined) {
+        if (error.message == "Network Error") {
           localStorage.clear()
           navigate("/login")
         }

@@ -55,7 +55,7 @@ export async function getProductsId(token: string | null, id: number): Promise<I
     const response: IProduct = request.data
     return response
   } catch (error) {
-    console.error(error)
+    ErrorException(error);
     throw error;
   }
 
@@ -80,8 +80,7 @@ export async function PutProduct(token: string | null, updateData: IProduct): Pr
     }, config);
     console.log("product updated!")
   } catch (error) {
-    console.error(error);
-    console.log(updateData)
+    ErrorException(error);
     throw error;
   }
 }
@@ -113,7 +112,8 @@ export async function getMeatTypes(): Promise<IMeatTypes[]> {
     const response = await axios.get(`${urlApi}/caracteristica`)
     return response.data
   } catch (error) {
-    throw error
+    ErrorException(error);
+    throw error;
   }
 }
 
@@ -123,7 +123,8 @@ export async function getSliceTypes(meatType: string | null) {
     return response.data;
 
   } catch (error) {
-    throw ErrorException(error);
+    ErrorException(error);
+    throw error;
   }
 }
 
@@ -139,6 +140,7 @@ export async function deleteProductById(token: string | null, id: number | undef
       "Product deleted: "
       , id)
   } catch (error) {
-    console.error(error)
+    ErrorException(error);
+    throw error;
   }
 }

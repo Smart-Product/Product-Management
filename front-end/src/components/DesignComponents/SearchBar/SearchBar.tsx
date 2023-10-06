@@ -23,7 +23,7 @@ const SearchBar = ({ search }: searchProps) => {
       const response = await getProductsFilter(token, produto)
       return search(response);
     } catch (error: any) {
-      if(error.response == undefined) {
+      if(error.message == "Network Error") {
         localStorage.clear()
         navigate("/login")
       }
