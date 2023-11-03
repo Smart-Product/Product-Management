@@ -21,6 +21,7 @@ import React from "react";
 import StoreIcon from "@mui/icons-material/Store";
 import { Avatar, Menu, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useCookie } from "../../hooks/useCookies";
 
 const drawerWidth = 240;
 
@@ -105,6 +106,11 @@ export const PageLayout: React.FC<{ children: React.ReactNode, title?: string | 
     return navigate(path);
   };
 
+  const logout = () => {
+    useCookie().destroy()
+    handleNavigate("/login")
+  }
+
   return (
     <Box sx={{ display: "flex", mt: 4 }}>
       <AppBar
@@ -185,7 +191,7 @@ export const PageLayout: React.FC<{ children: React.ReactNode, title?: string | 
             onClose={handleCloseUserMenu}
           >
             <MenuItem onClick={handleCloseUserMenu}>
-              <Typography onClick={() => handleNavigate("/login")}>
+              <Typography onClick={() => logout()}>
                 Logout
               </Typography>
             </MenuItem>

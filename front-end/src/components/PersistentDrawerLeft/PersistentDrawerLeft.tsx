@@ -23,6 +23,7 @@ import * as React from "react";
 import StoreIcon from "@mui/icons-material/Store";
 import { Avatar, Menu, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useCookie } from "../../hooks/useCookies";
 
 const drawerWidth = 240;
 
@@ -103,9 +104,9 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
 
-  const handleNavigate = (path: string) => {
-    localStorage.clear();
-    return navigate(path)
+  const logout = () => {
+
+    useCookie().destroy()
   }
 
 
@@ -188,7 +189,7 @@ export default function PersistentDrawerLeft() {
             onClose={handleCloseUserMenu}
           >
               <MenuItem onClick={handleCloseUserMenu}>
-                <Typography onClick={() => handleNavigate("/login")}>Logout</Typography>
+                <Typography onClick={() => logout()}>Logout</Typography>
               </MenuItem>
           </Menu>
         </Box>
