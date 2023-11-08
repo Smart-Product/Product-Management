@@ -3,7 +3,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export const ErrorException = (errors: any) => {
   if (errors.message == "Network Error") {
-    toast.info("TOKEN expirado!"); 
+    toast.info("Acesso expirado, faça login novamente"); 
   }else {
     const status = errors.response.status;
     if (status.toString().charAt(0) != '5') {
