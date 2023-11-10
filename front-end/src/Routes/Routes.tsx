@@ -19,7 +19,7 @@ export function Routes() {
       <Route path="/produto" element={<ProductPage />} />
       <Route path="/produto/:id" element={<ProductEditPage />} />
       <Route path="/produto/delete/:id" element={<ProductListPage />} />
-      <Route path="/cadastro" element={<UserForms />} />
+            <Route path="/cadastro" element={<UserForms />} />
       <Route path="/login" element={<Login />} />
     </ReactRoutes>
   )
