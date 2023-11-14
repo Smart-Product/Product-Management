@@ -170,8 +170,8 @@ export const PageLayout: React.FC<{ children: React.ReactNode, title?: string | 
         >
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
             <Avatar
-              alt="Remy Sharp"
-              src="https://images.unsplash.com/photo-1691874683123-5d7bf8d79df1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80"
+              alt={useCookie().getAuthCookie().login}
+              src={useCookie().getAuthCookie().login}
             />
           </IconButton>
           <Menu
