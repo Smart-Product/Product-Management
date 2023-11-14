@@ -42,6 +42,8 @@ public class ProdutoService {
 		produtoRepository.findById(produtoNovo.getProdutoId())
 				.map((produtoAntigo) -> {
 					produtoNovo.setProdutoId(produtoAntigo.getProdutoId());
+					JwtClaims claims = AppProviders.JWT_CLAIMS.get();
+					produtoNovo.setUsuario(usuarioRepository.findById(claims.getUsuarioId()).get());
 					return produtoRepository.save(produtoNovo);
 				})
 				.orElseThrow(() -> new ProductNotFoundException());
