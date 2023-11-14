@@ -12,9 +12,10 @@ interface Label {
 export const Label = ({ text, color, quantity }: Label) => {
 
     return (
-        <Box sx={{ backgroundColor: "#e6e5e5", borderRadius: "20px", width: "180px", display: "flex", justifyContent: "center", alignItems: "center", padding: "10px"}}>
+        <Box sx={{ backgroundColor: "#e6e5e5", borderRadius: "10px", width: "180px",
+         display: "flex", justifyContent: "center", alignItems: "center", padding: "10px", border: `2px solid ${color}`}}>
             <FiberManualRecordIcon htmlColor={color} sx={{ width: "15px" }} />
-            <Typography variant="body2" sx={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0 auto" }}>
+            <Typography sx={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0 auto", fontWeight: "500" }}>
                 {text}: {quantity}
             </Typography>
         </Box>

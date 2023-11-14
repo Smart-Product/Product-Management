@@ -1,6 +1,6 @@
 
 export const tokenColors = {
     primary : "green",
-    secondary: "yellow",
+    secondary: "orange",
     error: "red"
 }

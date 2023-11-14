@@ -17,6 +17,8 @@ import { ProductFormContainer } from "../ProductForms.styles";
 import { ProductCreateSuccess, ProductEditedSuccess, formError } from "../../../utils/utils";
 import { PageLayout } from "../../PersistentDrawerLeft/PageLayout";
 import { useParams } from 'react-router-dom';
+import { useCookie } from "../../../hooks/useCookies";
+import { ProtectedPage } from "../../Security/ProtectedPage/ProtectedPage";
 
 
 interface SelectProps {
@@ -154,22 +156,16 @@ const ProductPage = () => {
 
   const [isNegativeNumber, setisNegativeNumber] = useState(false);
 
-  const token: string | null = localStorage.getItem("token")
-
-
+  const token = useCookie().getAuthCookie().token
 
   useMemo(() => {
     const fetchTypes = async () => {
       const dataTypes = await getMeatTypes();
-      console.log(dataTypes)
       setListMeatTypes(dataTypes)
     };
 
     fetchTypes();
     setTitlePageLayout("Adicionar Produto")
-
-
-
   }, []);
 
   const handleInputChange = (
@@ -217,7 +213,7 @@ const ProductPage = () => {
 
   const createProduct = async (token: string | null, product: IProduct) => {
     let date: string = product.dataValidade ?? ""
-    let dateString = new Date(Date.parse(date))
+    let dateString = new Date(date + "T00:00:00");
 
     try {
       if (dateString < new Date()) {
@@ -295,101 +291,103 @@ const ProductPage = () => {
     }
   };
 
-  return (<>
-    <PageLayout title={titlePageLayout}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          minWidth: "80%"
-        }}
-      >
+  return (
+    <ProtectedPage>
+
+      <PageLayout title={titlePageLayout}>
         <Box
           sx={{
             display: "flex",
-            width: "94vw",
-            justifyContent: "flex-end",
-            mt: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            minWidth: "80%"
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-            <IconButton onClick={() => navigate("/")}>
-              <CloseIcon />
-            </IconButton>
+          <Box
+            sx={{
+              display: "flex",
+              width: "94vw",
+              justifyContent: "flex-end",
+              mt: 1,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+              <IconButton onClick={() => navigate("/")}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
           </Box>
-        </Box>
 
-        <ProductFormContainer onSubmit={handleSubmit}>
-          <TextField
-            label="Nome do produto"
-            type="text"
-            name="nome"
-            required
-            placeholder="Nome..."
-            value={product?.nome || ''}
-            onChange={handleInputChange}
-          />
-
-          {listMeatTypes?.length > 0 ? (
-            <MultiSelect
-              typesList={listMeatTypes}
-              label="Tipos de Carne"
-              handleMeat={handleTypeMeat}
-              clear={clear}
-            />
-          ) : (
-            <TextField label="Tipos de Carne" disabled />
-          )}
-
-
-          {listSliceTypes?.length > 0 ? (
-            <MultiSelect
-              typesList={listSliceTypes}
-              label="Tipos de Corte"
-              handleSlice={handleTypeSlice}
-              clear={clear}
-
-            />
-          ) : (
-            <TextField label="Escolha um tipo de Carne" disabled />
-          )}
-
-          <NumericInput name={"pesoPecaKg"} label={"Peso em kg"} value={product?.pesoPecaKg!} handleInput={handleInputChange} />
-
-          <NumericInput name={"quantidadePeca"} label={"Quantidade"} value={product?.quantidadePeca} handleInput={handleInputChange} />
-
-          <NumericInput name={"precoKg"} label={"Preço por kilo"} value={product?.precoKg} handleInput={handleInputChange} />
-
-          <TextField
-            label="Data de validade"
-            type="date"
-            name="dataValidade"
-            required
-            value={product?.dataValidade || ''}
-            onChange={handleInputChange}
-          />
-
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, minWidth: "100%" }}>
-            <textarea
-              name="descricao"
-              id="descricao"
-              placeholder="Descrição..."
-              onInput={() => autoResize("descricao")}
-              value={product?.descricao || ''}
+          <ProductFormContainer onSubmit={handleSubmit}>
+            <TextField
+              label="Nome do produto"
+              type="text"
+              name="nome"
+              required
+              placeholder="Nome..."
+              value={product?.nome || ''}
               onChange={handleInputChange}
             />
 
-            <Button variant="contained" type="submit" startIcon={<AddIcon />}>
-              Adicionar
-            </Button>
-          </Box>
-        </ProductFormContainer>
-      </Box>
-    </PageLayout>
-  </>
+            {listMeatTypes?.length > 0 ? (
+              <MultiSelect
+                typesList={listMeatTypes}
+                label="Tipos de Carne"
+                handleMeat={handleTypeMeat}
+                clear={clear}
+              />
+            ) : (
+              <TextField label="Tipos de Carne" disabled />
+            )}
 
+
+            {listSliceTypes?.length > 0 ? (
+              <MultiSelect
+                typesList={listSliceTypes}
+                label="Tipos de Corte"
+                handleSlice={handleTypeSlice}
+                clear={clear}
+
+              />
+            ) : (
+              <TextField label="Escolha um tipo de Carne" disabled />
+            )}
+
+            <NumericInput name={"pesoPecaKg"} label={"Peso em kg"} value={product?.pesoPecaKg!} handleInput={handleInputChange} />
+
+            <NumericInput name={"quantidadePeca"} label={"Quantidade"} value={product?.quantidadePeca} handleInput={handleInputChange} />
+
+            <NumericInput name={"precoKg"} label={"Preço por kilo"} value={product?.precoKg} handleInput={handleInputChange} />
+
+            <TextField
+              label="Data de validade"
+              type="date"
+              name="dataValidade"
+              required
+              value={product?.dataValidade || ''}
+              onChange={handleInputChange}
+            />
+
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2, minWidth: "100%" }}>
+              <textarea
+                name="descricao"
+                id="descricao"
+                placeholder="Descrição..."
+                onInput={() => autoResize("descricao")}
+                value={product?.descricao || ''}
+                onChange={handleInputChange}
+              />
+
+              <Button variant="contained" type="submit" startIcon={<AddIcon />}>
+                Adicionar
+              </Button>
+            </Box>
+          </ProductFormContainer>
+        </Box>
+      </PageLayout>
+
+    </ProtectedPage>
   );
 };
 

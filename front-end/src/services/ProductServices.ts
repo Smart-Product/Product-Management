@@ -13,9 +13,11 @@ export async function getProducts(token: string | null): Promise<IProduct[]> {
       }
     }
     const response = (await axios.get(`${urlApi}/produtos`, config));
+    console.log("Produtos: ", response)
     return response.data;
   } catch (error) {
     ErrorException(error);
+    console.log("Deu ruim")
     throw error
   }
 }
@@ -44,7 +46,7 @@ export async function getProductsFilter(token: string | null, product: IProduct 
 }
 
 export async function getProductsId(token: string | null, id: number): Promise<IProduct> {
-
+  console.log("Tentou")
   try {
     const config = {
       headers: {
@@ -86,6 +88,7 @@ export async function PutProduct(token: string | null, updateData: IProduct): Pr
 }
 
 export async function postProducts(token: string | null, product: IProduct) {
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`

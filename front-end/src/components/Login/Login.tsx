@@ -6,6 +6,7 @@ import { autenticar } from "../../services/UserServices";
 import { Box, TextField, Button } from "@mui/material";
 import { UserFormContainer } from "../FormComponents/UserForms/UserForms.styles";
 import { formatCPF } from "../FormComponents/UserForms/CpfFormat";
+import { useCookie } from "../../hooks/useCookies";
 
 
 const Login = () => {
@@ -36,15 +37,10 @@ const Login = () => {
       const response = await autenticar(credential);
       setCredential(clearForm);
       setClear(true);
-      insertLocalStorage(response);
+      useCookie().createTokenCookie(response);
       navigate("/")
     } catch (error) {
     }
-  }
-  
-  const insertLocalStorage =(response: IUserLogin) => {
-    localStorage.setItem("login", response.login);
-    localStorage.setItem("token", response.token);
   }
 
   const clearForm: ICredentials = {
