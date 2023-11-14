@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import { IProduct } from '../../../interface/IProduct';
 import { getProductsFilter } from '../../../services/ProductServices';
 import { useNavigate } from 'react-router-dom';
+import { useCookie } from '../../../hooks/useCookies';
 
 interface searchProps {
   search: (value: IProduct[]) => void
 }
 const SearchBar = ({ search }: searchProps) => {
   const [produto, setProduct] = useState<IProduct>();
-  const token: string | null = localStorage.getItem("token")
+  const token = useCookie().getAuthCookie().token;
   const navigate = useNavigate();
 
   const handleNomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +24,7 @@ const SearchBar = ({ search }: searchProps) => {
       const response = await getProductsFilter(token, produto)
       return search(response);
     } catch (error: any) {
-      if(error.message == "Network Error") {
+      if(error.response.data.message == "Token Inválido." || error.response.data.message == "Token expirado!") {
         localStorage.clear()
         navigate("/login")
       }
