@@ -178,7 +178,7 @@ const ProductEditPage = () => {
                 const request = await getProductsId(token, id)
                 return setProduct(request);
             } catch (error: any) {
-                if (error.message == "Network Error") {
+                if (error.response.data.message == "Token Inválido." || error.response.data.message == "Token expirado!") {
                     localStorage.clear()
                     navigate("/login")
                 }
@@ -288,7 +288,7 @@ const ProductEditPage = () => {
             }
 
         } catch (error: any) {
-            if (error.message == "Network Error") {
+            if (error.response.data.message == "Token Inválido." || error.response.data.message == "Token expirado!") {
                 localStorage.clear()
                 navigate("/login")
             }

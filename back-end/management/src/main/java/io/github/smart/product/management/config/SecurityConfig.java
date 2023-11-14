@@ -44,17 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+        http.cors().and()
+                .csrf().disable() // Desative o CSRF para simplificar
+                .authorizeRequests().anyRequest().permitAll()
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+                .httpBasic(); // Ou qualquer outro método de autenticação que você esteja usando
     }
 }

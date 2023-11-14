@@ -5,17 +5,17 @@ import java.util.List;
 
 public class ApiErrors {
 
-    private List<String> messageErrors;
+    private List<String> message;
 
     public ApiErrors(List<String> errors) {
-        this.messageErrors = errors;
+        this.message = errors;
     }
 
     public ApiErrors(String messageError) {
-        this.messageErrors = Arrays.asList(messageError);
+        this.message = Arrays.asList(messageError);
     }
 
-    public List<String> getMessageErrors() {
-        return messageErrors;
+    public List<String> getMessage() {
+        return message;
     }
 }

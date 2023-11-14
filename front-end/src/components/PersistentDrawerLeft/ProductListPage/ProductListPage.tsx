@@ -152,7 +152,7 @@ export default function ProductPage() {
       handleClose();
       setProductDeleted(id)
     } catch (error: any) {
-      if (error.message == "Network Error") {
+      if (error.response.data.message == "Token Inválido." || error.response.data.message == "Token expirado!") {
         localStorage.clear()
         navigate("/login")
       }
@@ -167,7 +167,7 @@ export default function ProductPage() {
       setProdutos([])
       return setProdutos(response);
     } catch (error: any) {
-      if (error.message == "Network Error") {
+      if (error.response.data.message == "Token Inválido." || error.response.data.message == "Token expirado!") {
         localStorage.clear()
         navigate("/login")
       }
@@ -181,7 +181,7 @@ export default function ProductPage() {
         const response = await getProducts(token);
         setProdutos(response);
       } catch (error: any) {
-        if (error.message == "Network Error") {
+        if (error.response.data.message == "Token Inválido." || error.response.data.message == "Token expirado!") {
           localStorage.clear()
           navigate("/login")
         }
@@ -197,7 +197,7 @@ export default function ProductPage() {
         const response = await getProducts(token);
         setProdutos(response);
       } catch (error: any) {
-        if (error.message == "Network Error") {
+        if (error.response.data.message == "Token Inválido." || error.response.data.message == "Token expirado!") {
           localStorage.clear()
           navigate("/login")
         }

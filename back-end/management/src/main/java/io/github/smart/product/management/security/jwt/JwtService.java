@@ -62,7 +62,7 @@ public class JwtService {
 
     public void validateToken(String token) {
         try {
-            if (StringUtils.isBlank(token) || token.equals("null")) {
+            if (StringUtils.isBlank(token) || token.equals("null") || token.equals("undefined")) {
                 throw new InvalidTokenException();
             }
             Jwts.parser().setSigningKey(getSigningKey()).parseClaimsJws(token);
