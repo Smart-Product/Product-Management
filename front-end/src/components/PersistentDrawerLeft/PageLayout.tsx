@@ -173,7 +173,6 @@ export const PageLayout: React.FC<{ children: React.ReactNode, title?: string | 
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
             <Avatar
               alt={useCookie().getAuthCookie().login}
-              about="Joao"
               src={useCookie().getAuthCookie().login}
             />
           </IconButton>
