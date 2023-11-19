@@ -5,7 +5,7 @@ export const ProductFormContainer = styled.form`
     
     display: flex;
     justify-content: center;
-    gap: 2rem;
+    gap: 1.2rem;
     flex-wrap: wrap;
     row-gap: "10px";
     width: 50%;

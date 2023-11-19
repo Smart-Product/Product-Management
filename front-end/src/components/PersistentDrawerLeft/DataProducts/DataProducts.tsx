@@ -5,8 +5,6 @@ import { ProtectedPage } from '../../Security/ProtectedPage/ProtectedPage';
 
 const DataPage = () => {
   return (
-
-    <ProtectedPage>
       <PageLayout>
         <Box sx={{ display: "flex", justifyContent: "center", flexDirection: "column" }}>
           <h1>Datas</h1>
@@ -18,7 +16,6 @@ const DataPage = () => {
           </Box>
         </Box>
       </PageLayout>
-    </ProtectedPage>
 
   );
 };

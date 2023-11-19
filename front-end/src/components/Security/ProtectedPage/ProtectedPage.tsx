@@ -1,22 +1,24 @@
+import { Typography } from "@mui/material"
+import Box from "@mui/material/Box"
 import { useNavigate } from "react-router-dom"
 import { useCookie } from "../../../hooks/useCookies"
-import React, {useEffect, useState} from 'react'
-import Box from "@mui/material/Box"
-import { Typography } from "@mui/material"
-import { LoadingError } from "../../DesignComponents/Loading/LoadingError"
+import { LoadingProgress } from "../../DesignComponents/Loading/LoadingProgress"
 
 const Redirecting = () => {
 
     const navigate = useNavigate()
 
-    navigate("/login")
+    setTimeout(() => {
+        navigate("/login")
+      }, 2000);
+    
 
     return (
         <Box sx={{margin: "0 auto", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", gap: 3}}>
             
-            <Typography variant="h4">Redirecionando ... </Typography>
+            <Typography variant="h4">Erro de Autenticação </Typography>
 
-            <LoadingError/>
+            <LoadingProgress/>
 
         </Box>
     )
@@ -24,18 +26,6 @@ const Redirecting = () => {
 
 export const ProtectedPage = ({ children }: { children: JSX.Element }) => {
     const verify = useCookie().getAuthCookie()
-    const [redirect, setRedirect] = useState(false)
-    
-
-    useEffect(() => {
-        if (!verify.token || !verify.login) {
-            setTimeout(() => {
-                setRedirect(true);
-                console.log("Redirecionado")
-              }, 2000);
-        }
-    }, [])
 
     return verify.token ? children : <Redirecting />
 }
-

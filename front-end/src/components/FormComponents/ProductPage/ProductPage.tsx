@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
+import { Box, Button, Fab, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IMeatTypes } from "../../../interface/IMeatTypes";
@@ -270,16 +270,6 @@ const ProductPage = () => {
     }
   };
 
-  const autoResize = (tagId: string) => {
-    const textarea: HTMLElement | null = document.getElementById(`${tagId}`);
-    if (textarea != null) {
-      textarea.style.height = "auto";
-      textarea.style.height = textarea.scrollHeight + "px";
-    } else {
-      return;
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (product?.tipoCorteCarne?.caracteristicaId == 0) {
@@ -301,7 +291,8 @@ const ProductPage = () => {
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "column",
-            minWidth: "80%"
+            minWidth: "80%",
+            mt:1
           }}
         >
           <Box
@@ -312,10 +303,11 @@ const ProductPage = () => {
               mt: 1,
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-              <IconButton onClick={() => navigate("/")}>
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", mt: 1 }}>
+
+              <Fab size= 'small' color="error" onClick={() => navigate("/")}>
                 <CloseIcon />
-              </IconButton>
+              </Fab>
             </Box>
           </Box>
 
@@ -360,23 +352,28 @@ const ProductPage = () => {
 
             <NumericInput name={"precoKg"} label={"Preço por kilo"} value={product?.precoKg} handleInput={handleInputChange} />
 
-            <TextField
-              label="Data de validade"
-              type="date"
-              name="dataValidade"
-              required
-              value={product?.dataValidade || ''}
-              onChange={handleInputChange}
-            />
+            <Box>
+              <TextField
+                type="date"
+                name="dataValidade"
+                required
+                value={product?.dataValidade || ''}
+                onChange={handleInputChange}
+              />
+              <FormHelperText id="filled-weight-helper-text">Data de Vencimento</FormHelperText>
+            </Box>
+
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2, minWidth: "100%" }}>
-              <textarea
+              <TextField
                 name="descricao"
                 id="descricao"
-                placeholder="Descrição..."
-                onInput={() => autoResize("descricao")}
+                label="Descrição"
+                size="small"
+                multiline
                 value={product?.descricao || ''}
                 onChange={handleInputChange}
+                maxRows={5}
               />
 
               <Button variant="contained" type="submit" startIcon={<AddIcon />}>

@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, IconButton, TextField } from "@mui/material";
+import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IUser } from "../../../interface/IUser";
@@ -23,22 +23,22 @@ const UserForms = () => {
     const { name, value } = e.target;
     let numericValue: string | number = value;
     let formattedCpf: string | number = value;
-    let valid =true;
+    let valid = true;
     if (e.target.type === "number") {
       numericValue = parseInt(value);
     }
     if (name == "cpf") {
       formattedCpf = formatCPF(value);
     }
-    if(name == "nome" && value.length > 40) {
+    if (name == "nome" && value.length > 40) {
       setErrorNomeMessage('Excedeu o total de caracteres');
       return;
     }
-    if(name == "email" && value.length > 40) {
+    if (name == "email" && value.length > 40) {
       setErrorEmailMessage('Excedeu o total de caracteres');
       return;
     }
-    if(name == "email" && !value.includes("@")) {
+    if (name == "email" && !value.includes("@")) {
       setErrorEmailMessage('Email inválido');
       valid = false;
     }
@@ -57,7 +57,7 @@ const UserForms = () => {
       setClear(true);
       navigate('/login')
       return response;
-    } catch (error){
+    } catch (error) {
     }
   };
 
@@ -92,19 +92,13 @@ const UserForms = () => {
             justifyContent: "space-between",
           }}
         >
-          <Box sx={{ textAlign: "center", width: "100%" }}>
-            <h1>Cadastro de usuário</h1>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton onClick={() => navigate("/login")}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
+
+          <Typography variant="h4" sx={{ margin: "0 auto" }}>Criar conta</Typography>
+
         </Box>
 
         <UserFormContainer onSubmit={handleSubmit} className="d">
-          <Box sx={{flexDirection:"column", width: "200px"}}>
-            <br />
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "30em" }}>
             <TextField
               label="Nome"
               type="text"
@@ -115,7 +109,6 @@ const UserForms = () => {
               onChange={handleInputChange}
             />
             <div className="error-message">{errorCpfMessage}</div>
-            <br />
             <TextField
               label="CPF"
               type="text"
@@ -125,9 +118,6 @@ const UserForms = () => {
               value={user?.cpf}
               onChange={handleInputChange}
             />
-            
-            <br />
-            <br />
             <TextField
               type="text"
               name="email"
@@ -138,8 +128,6 @@ const UserForms = () => {
               onChange={handleInputChange}
             />
             <div className="error-message">{errorEmailMessage}</div>
-
-            <br />
             <TextField
               type="password"
               name="senha"
@@ -148,9 +136,7 @@ const UserForms = () => {
               required
               onChange={handleInputChange}
             />
-            
-            <br />
-            <br />
+
             <TextField
               type="password"
               label="Confirmar Senha"
@@ -159,12 +145,14 @@ const UserForms = () => {
               required
               onChange={handleInputChange}
             />
-            
-            <br />
-            <br />
-            <Button variant="contained" type="submit">
+
+
+            <Button variant="contained" type="submit" sx={{ width: "30%", m: "0 auto" }}>
               Cadastrar
             </Button>
+
+            <Typography variant="inherit">Já tem conta ? Faça o Login <Link to={"/login"}>aqui</Link></Typography>
+
           </Box>
         </UserFormContainer>
       </Box>
