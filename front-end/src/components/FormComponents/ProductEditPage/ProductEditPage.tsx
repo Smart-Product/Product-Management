@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
+import { Box, Button, Fab, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { IMeatTypes } from "../../../interface/IMeatTypes";
@@ -235,16 +235,6 @@ const ProductEditPage = () => {
         //todo: inserir este tipo de corte no formulario
     };
 
-    const autoResize = (tagId: string) => {
-        const textarea: HTMLElement | null = document.getElementById(`${tagId}`);
-        if (textarea != null) {
-            textarea.style.height = "auto";
-            textarea.style.height = textarea.scrollHeight + "px";
-        } else {
-            return;
-        }
-    };
-
     const editProduct = async (token: string | null, product: IProduct) => {
         let date: string = product.dataValidade ?? ""
         let dateString = new Date(Date.parse(date))
@@ -309,102 +299,105 @@ const ProductEditPage = () => {
     };
 
     return (
-        <ProtectedPage>
-            <PageLayout title={titlePageLayout}>
+        <PageLayout title={titlePageLayout}>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    minWidth: "80%"
+                }}
+            >
                 <Box
                     sx={{
                         display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        flexDirection: "column",
-                        minWidth: "80%"
+                        width: "94vw",
+                        justifyContent: "flex-end",
+                        mt: 1,
                     }}
                 >
-                    <Box
-                        sx={{
-                            display: "flex",
-                            width: "94vw",
-                            justifyContent: "flex-end",
-                            mt: 1,
-                        }}
-                    >
-                        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-                            <IconButton onClick={() => navigate("/")}>
-                                <CloseIcon />
-                            </IconButton>
-                        </Box>
-                    </Box>
+                    <Fab size='small' color="error" onClick={() => navigate("/")}>
+                        <CloseIcon />  
+                    </Fab>
+                </Box>
 
-                    <ProductFormContainer onSubmit={handleSubmit}>
-                        <TextField
-                            label="Nome do produto"
-                            type="text"
-                            name="nome"
-                            required
-                            placeholder="Nome..."
-                            value={product?.nome || ''}
-                            onChange={handleInputChange}
+                <ProductFormContainer onSubmit={handleSubmit}>
+                    <TextField
+                        label="Nome do produto"
+                        type="text"
+                        name="nome"
+                        required
+                        placeholder="Nome..."
+                        value={product?.nome || ''}
+                        onChange={handleInputChange}
+                    />
+
+                    {listMeatTypes?.length > 0 ? (
+                        <MultiSelect
+                            typesList={listMeatTypes}
+                            label="Tipos de Carne"
+                            handleMeat={handleTypeMeat}
+                            clear={clear}
+                            descricao={product?.tipoCorteCarne?.descricao ?? ""}
                         />
-
-                        {listMeatTypes?.length > 0 ? (
-                            <MultiSelect
-                                typesList={listMeatTypes}
-                                label="Tipos de Carne"
-                                handleMeat={handleTypeMeat}
-                                clear={clear}
-                                descricao={product?.tipoCorteCarne?.descricao ?? ""}
-                            />
-                        ) : (
-                            <TextField label="Tipos de Carne" disabled />
-                        )}
+                    ) : (
+                        <TextField label="Tipos de Carne" disabled />
+                    )}
 
 
-                        {listSliceTypes?.length > 0 ? (
-                            <MultiSelect
-                                typesList={listSliceTypes}
-                                label="Tipos de Corte"
-                                handleSlice={handleTypeSlice}
-                                clear={clear}
-                                caracteristicaId={product?.tipoCorteCarne?.caracteristicaId ?? ""}
+                    {listSliceTypes?.length > 0 ? (
+                        <MultiSelect
+                            typesList={listSliceTypes}
+                            label="Tipos de Corte"
+                            handleSlice={handleTypeSlice}
+                            clear={clear}
+                            caracteristicaId={product?.tipoCorteCarne?.caracteristicaId ?? ""}
 
-                            />
-                        ) : (
-                            <TextField label="Escolha um tipo de Carne" disabled />
-                        )}
+                        />
+                    ) : (
+                        <TextField label="Escolha um tipo de Carne" disabled />
+                    )}
 
-                        <NumericInput name={"pesoPecaKg"} label={"Peso em kg"} value={product?.pesoPecaKg!} handleInput={handleInputChange} />
+                    <NumericInput name={"pesoPecaKg"} label={"Peso em kg"} value={product?.pesoPecaKg!} handleInput={handleInputChange} />
 
-                        <NumericInput name={"quantidadePeca"} label={"Quantidade"} value={product?.quantidadePeca} handleInput={handleInputChange} />
+                    <NumericInput name={"quantidadePeca"} label={"Quantidade"} value={product?.quantidadePeca} handleInput={handleInputChange} />
 
-                        <NumericInput name={"precoKg"} label={"Preço por kilo"} value={product?.precoKg} handleInput={handleInputChange} />
+                    <NumericInput name={"precoKg"} label={"Preço por kilo"} value={product?.precoKg} handleInput={handleInputChange} />
 
+
+                    <Box>
                         <TextField
-                            label="Data de validade"
                             type="date"
                             name="dataValidade"
                             required
                             value={product?.dataValidade || ''}
                             onChange={handleInputChange}
                         />
+                        <FormHelperText id="filled-weight-helper-text">Data de Vencimento</FormHelperText>
+                    </Box>
 
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, minWidth: "100%" }}>
-                            <textarea
-                                name="descricao"
-                                id="descricao"
-                                placeholder="Descrição..."
-                                onInput={() => autoResize("descricao")}
-                                value={product?.descricao || ''}
-                                onChange={handleInputChange}
-                            />
 
-                            <Button variant="contained" type="submit" startIcon={<AddIcon />}>
-                                Salvar
-                            </Button>
-                        </Box>
-                    </ProductFormContainer>
-                </Box>
-            </PageLayout>
-        </ProtectedPage>
+
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, minWidth: "100%" }}>
+
+                        <TextField
+                            name="descricao"
+                            id="descricao"
+                            label="Descrição"
+                            size="small"
+                            multiline
+                            value={product?.descricao || ''}
+                            onChange={handleInputChange}
+                            maxRows={5}
+                        />
+                        <Button variant="contained" type="submit" startIcon={<AddIcon />}>
+                            Salvar
+                        </Button>
+                    </Box>
+                </ProductFormContainer>
+            </Box>
+        </PageLayout>
 
     );
 };

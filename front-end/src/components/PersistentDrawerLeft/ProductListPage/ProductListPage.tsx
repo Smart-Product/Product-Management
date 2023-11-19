@@ -3,7 +3,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import DeleteIcon from "@mui/icons-material/Delete";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { Backdrop, Button, Fade, Modal } from "@mui/material";
+import { Backdrop, Button, Divider, Fab, Fade, Modal } from "@mui/material";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
@@ -17,13 +17,12 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCookie } from "../../../hooks/useCookies";
 import { IProduct } from "../../../interface/IProduct";
 import { deleteProductById, getProducts } from "../../../services/ProductServices";
+import { formError, formatDate } from "../../../utils/utils";
 import SearchBar from "../../DesignComponents/SearchBar/SearchBar";
 import { PageLayout } from "../PageLayout";
-import { formError, formatDate } from "../../../utils/utils";
-import { useCookie } from "../../../hooks/useCookies";
-import { ProtectedPage } from "../../Security/ProtectedPage/ProtectedPage";
 
 //Row = Linha 
 const Row: React.FC<{ produto: IProduct, handleOpenModal: (id: number | undefined) => void }> = ({ produto, handleOpenModal }) => {
@@ -207,81 +206,79 @@ export default function ProductPage() {
   }, [productDeleted]);
 
   return (
-    <ProtectedPage>
-      <PageLayout>
-        <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "column" }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <SearchBar search={search} />
+    <PageLayout>
+      <Box sx={{ mt: 3, display: "flex", gap: 2 , flexDirection: "column",justifyContent: "center", alignItems: "center" }}>
+        <Box sx={{ display: "flex", gap: 2, width: "98%",  }}>
 
-            <IconButton aria-label="adicionar" size="large">
-              <AddIcon onClick={() => navigate("/produto")} />
-            </IconButton>
-          </Box>
-
-          <Box>
-            <Modal
-              aria-labelledby="transition-modal-title"
-              aria-describedby="transition-modal-description"
-              open={open}
-              onClose={handleClose}
-              closeAfterTransition
-              slots={{ backdrop: Backdrop }}
-              slotProps={{
-                backdrop: {
-                  timeout: 500,
-                },
-              }}
-            >
-              <Fade in={open}>
-                <Box sx={{
-                  position: 'absolute' as 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: 400,
-                  bgcolor: 'background.paper',
-                  border: '2px solid #000',
-                  boxShadow: 24,
-                  p: 4,
-                  display: "flex",
-                  justifyContent: "space-between",
-                  flexDirection: "column"
-                }}>
-                  <Typography id="transition-modal-title" variant="h6" component="h2">
-                    Você quer mesmo deletar este produto ?
-                  </Typography>
-                  <Button variant="outlined" onClick={() => deleteProduct(token, productId)} sx={{ mt: 2 }}>
-                    Sim
-                  </Button>
-                  <Button variant="outlined" onClick={() => handleClose()} sx={{ mt: 2 }}>
-                    Não
-                  </Button>
-                </Box>
-              </Fade>
-            </Modal>
-          </Box>
-
-          <TableContainer component={Paper}>
-            <Table aria-label="collapsible table">
-              <TableHead>
-                <TableRow>
-                  <TableCell />
-                  <TableCell>Seus Produtos</TableCell>
-                  <TableCell align="center">Peso/kg</TableCell>
-                  <TableCell align="center">Quantidade</TableCell>
-                  <TableCell align="center">Preço</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {produtos.map((produto) => (
-                  <Row key={produto.produtoId} produto={produto} handleOpenModal={handleOpen} />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <SearchBar search={search} />
+          
+          <Fab size="small" color="primary" aria-label="add" onClick={() => navigate("/produto")}>
+            <AddIcon />
+          </Fab>
         </Box>
-      </PageLayout>
-    </ProtectedPage>
 
+        <Box>
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            open={open}
+            onClose={handleClose}
+            closeAfterTransition
+            slots={{ backdrop: Backdrop }}
+            slotProps={{
+              backdrop: {
+                timeout: 500,
+              },
+            }}
+          >
+            <Fade in={open}>
+              <Box sx={{
+                position: 'absolute' as 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 400,
+                bgcolor: 'background.paper',
+                border: '2px solid #000',
+                boxShadow: 24,
+                p: 4,
+                display: "flex",
+                justifyContent: "space-between",
+                flexDirection: "column"
+              }}>
+                <Typography id="transition-modal-title" variant="h6" component="h2">
+                  Você quer mesmo deletar este produto ?
+                </Typography>
+                <Button variant="outlined" onClick={() => deleteProduct(token, productId)} sx={{ mt: 2 }}>
+                  Sim
+                </Button>
+                <Button variant="outlined" onClick={() => handleClose()} sx={{ mt: 2 }}>
+                  Não
+                </Button>
+              </Box>
+            </Fade>
+          </Modal>
+        </Box>
+
+        <TableContainer component={Paper}>
+          <Table aria-label="collapsible table">
+            <TableHead>
+              <TableRow>
+                <TableCell />
+                <TableCell>Seus Produtos</TableCell>
+                <TableCell align="center">Peso/kg</TableCell>
+                <TableCell align="center">Quantidade</TableCell>
+                <TableCell align="center">Preço</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {produtos.map((produto) => (
+                <Row key={produto.produtoId} produto={produto} handleOpenModal={handleOpen} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+    </PageLayout>
   );
 }

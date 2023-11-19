@@ -3,7 +3,7 @@ import { IUserLogin } from "../../interface/IUserLogin";
 import { ICredentials } from "../../interface/ICredentials";
 import { Link, useNavigate } from "react-router-dom";
 import { autenticar } from "../../services/UserServices";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, Typography } from "@mui/material";
 import { UserFormContainer } from "../FormComponents/UserForms/UserForms.styles";
 import { formatCPF } from "../FormComponents/UserForms/CpfFormat";
 import { useCookie } from "../../hooks/useCookies";
@@ -21,7 +21,7 @@ const Login = () => {
 
     let formattedCpf: string | number = value;
     let contemLetra = regex.test(value);
-    
+
     if (name == "login" && !contemLetra) {
       formattedCpf = formatCPF(value);
     }
@@ -54,43 +54,37 @@ const Login = () => {
   };
 
   return (
-    <>
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-        <Box sx={{ display: "flex", width: "100vw", justifyContent: "space-between" }}>
-          <Box sx={{ textAlign: "center", width: "100%" }}><h1>Login</h1></Box>
-        </Box>
+    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", height: "100vh", gap: 8 }}>
+      <Typography variant="h3" sx={{ textAlign: "center", width: "100%" }}>Smart Product</Typography>
         <UserFormContainer onSubmit={handleSubmit} className="d">
-            <Box sx={{ flexDirection: "column", width: "300px" }}>
-              <br />
-              <TextField
-                label="E-mail ou CPF"
-                type="text"  
-                name="login"
-                required
-                placeholder="Digite email ou CPF..."
-                value={credential?.login}
-                onChange={handleInputChange}
-              />
-              <br />
-              <br />
-              <TextField
-                label="Senha"
-                type="password"  
-                name="senha"
-                required
-                placeholder="Digite email ou CPF..."
-                value={credential?.senha}
-                onChange={handleInputChange}
-              />
-              <br />
-              <br />
-              <Button variant="contained" type="submit">Logar</Button>
-              <br />
-              <p>Precisa de uma conta ? Crie <Link to={"/cadastro"}>Aqui</Link></p>
+        <Typography variant="h4" sx={{ textAlign: "center", width: "100%" }}>Login</Typography>
+          <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
+            <br />
+            <TextField
+              label="E-mail ou CPF"
+              type="text"
+              name="login"
+              required
+              placeholder="Digite email ou CPF..."
+              value={credential?.login}
+              onChange={handleInputChange}
+            />
+            <TextField
+              label="Senha"
+              type="password"
+              name="senha"
+              required
+              placeholder="Digite email ou CPF..."
+              value={credential?.senha}
+              onChange={handleInputChange}
+            />
+            <Box sx={{display: "flex", gap: 3}}>
+              <Button variant="contained" type="submit">Entrar</Button>
+              <Button variant="contained" type="submit" onClick={() => navigate("/cadastro")} >Criar conta</Button>
             </Box>
-          </UserFormContainer>
+          </Box>
+        </UserFormContainer>
       </Box>
-    </>
   );
 };
 

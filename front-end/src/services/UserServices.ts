@@ -5,6 +5,8 @@ import { ICredentials } from "../interface/ICredentials";
 import { IUserLogin } from "../interface/IUserLogin";
 import { ErrorException } from "../utils/exception";
 
+
+
 const urlApi = "http://localhost:8000/api/usuarios";
 
 export async function postUsers(user: IUser) {

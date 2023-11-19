@@ -22,6 +22,8 @@ import StoreIcon from "@mui/icons-material/Store";
 import { Avatar, Menu, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useCookie } from "../../hooks/useCookies";
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 const drawerWidth = 240;
 
@@ -152,7 +154,7 @@ export const PageLayout: React.FC<{ children: React.ReactNode, title?: string | 
           >
             <StoreIcon />
 
-            <Typography variant="h6" noWrap component="div">
+            <Typography variant="h6" noWrap component="div" sx={{ fontWeight: "400" }}>
               {title ? (<> {title} </>
               ) : (<>Product Management</>
               )}
@@ -191,8 +193,15 @@ export const PageLayout: React.FC<{ children: React.ReactNode, title?: string | 
             onClose={handleCloseUserMenu}
           >
             <MenuItem onClick={handleCloseUserMenu}>
-              <Typography onClick={() => logout()}>
-                Logout
+              <Typography onClick={() => logout()} sx={{display: "flex", justifyContent: "center", alignItems: "center", gap: 1}}>
+              <LogoutIcon /> 
+                Sair
+              </Typography>
+            </MenuItem>
+            <MenuItem onClick={handleCloseUserMenu}>
+              <Typography onClick={() => navigate("/user/edit")} sx={{display: "flex", justifyContent: "center", alignItems: "center", gap: 1}}>
+                <AccountBoxIcon/>
+                Perfil
               </Typography>
             </MenuItem>
           </Menu>
